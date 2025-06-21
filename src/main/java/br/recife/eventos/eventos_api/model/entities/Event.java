@@ -62,7 +62,7 @@ public class Event {
     private String ticketLink;
 
     @ManyToOne
-    @JoinColumn(name = "id_dono")
+    @JoinColumn(name = "id_owner_user")
     private EventOwnerUser ownerUser;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
