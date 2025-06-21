@@ -38,6 +38,10 @@ public class Chat {
     private LocalDateTime createdAt;
 
     @ManyToOne
+    @JoinColumn(name = "id_common_user")
+    private CommonUser commonUser;
+
+    @ManyToOne
     @JoinColumn(name = "id_owner_user")
     private EventOwnerUser ownerUser;
 

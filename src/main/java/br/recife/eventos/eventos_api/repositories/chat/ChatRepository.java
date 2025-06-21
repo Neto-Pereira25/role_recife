@@ -10,7 +10,7 @@ import br.recife.eventos.eventos_api.models.entities.CommonUser;
 import br.recife.eventos.eventos_api.models.entities.EventOwnerUser;
 
 public interface ChatRepository extends JpaRepository<Chat, Long> {
-    Optional<Chat> findByCommonUserAndEventOwnerUser(CommonUser user, EventOwnerUser ownerUser);
+    Optional<Chat> findByCommonUserAndOwnerUser(CommonUser user, EventOwnerUser ownerUser);
 
     List<Chat> findByCommonUserIdOrOwnerUserId(Long commonUserId, Long ownerUserId);
 }
