@@ -1,4 +1,4 @@
-package br.recife.eventos.eventos_api.model.entities;
+package br.recife.eventos.eventos_api.models.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
