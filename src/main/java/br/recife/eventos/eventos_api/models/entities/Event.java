@@ -3,11 +3,15 @@ package br.recife.eventos.eventos_api.models.entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -71,17 +75,51 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<EventImage> images;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(name = "tag")
+    private List<String> tags;
+
     public enum Periodicity {
         SINGLE_EVENT,
         WEEKLY_EVENT,
-        MONTHLY_EVENT
+        MONTHLY_EVENT;
+
+        @JsonCreator
+        public static Periodicity fromString(String value) {
+            try {
+                return Periodicity.valueOf(value.toUpperCase());
+            } catch (Exception e) {
+                throw new IllegalArgumentException(
+                        "O valor para a frequência/periodicidade do evento está inválido. Os valores permitidos são: [SINGLE_EVENT, WEEKLY_EVENT, MONTHLY_EVENT]");
+            }
+        }
     }
 
     public enum SpaceType {
-        OPEN, CLOSE
+        OPEN, CLOSE;
+
+        @JsonCreator
+        public static SpaceType fromString(String value) {
+            try {
+                return SpaceType.valueOf(value.toUpperCase());
+            } catch (Exception e) {
+                throw new IllegalArgumentException(
+                        "O valor para o espaço do evento está inválido. Os valores permitidos são: [OPEN, CLOSE]");
+            }
+        }
     }
 
     public enum EventType {
-        FREE_EVENT, PAID_EVENT
+        FREE_EVENT, PAID_EVENT;
+
+        @JsonCreator
+        public static EventType fromString(String value) {
+            try {
+                return EventType.valueOf(value.toUpperCase());
+            } catch (Exception e) {
+                throw new IllegalArgumentException(
+                        "O valor para o tipo de evento está inválido. Os valores permitidos são: [FREE_EVENT, PAID_EVENT]");
+            }
+        }
     }
 }
