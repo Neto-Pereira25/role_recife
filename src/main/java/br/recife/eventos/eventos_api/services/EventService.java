@@ -2,10 +2,12 @@ package br.recife.eventos.eventos_api.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import br.recife.eventos.eventos_api.dto.event.EventCreateDTO;
+import br.recife.eventos.eventos_api.dto.event.EventResponseDTO;
 import br.recife.eventos.eventos_api.exceptions.ResourceNotFoundException;
 import br.recife.eventos.eventos_api.models.entities.Attraction;
 import br.recife.eventos.eventos_api.models.entities.Event;
@@ -84,5 +86,33 @@ public class EventService {
         }
 
         return event;
+    }
+
+    public List<EventResponseDTO> listAllEvents() {
+        List<Event> events = eventRepository.findAll();
+
+        return events.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public EventResponseDTO mapToDTO(Event event) {
+        return EventResponseDTO.builder()
+                .id(event.getId())
+                .name(event.getName())
+                .description(event.getDescription())
+                .location(event.getLocation())
+                .dateHour(event.getDateHour())
+                .ageGroup(event.getAgeGroup())
+                .eventType(event.getEventType())
+                .spaceType(event.getSpaceType())
+                .periodicity(event.getPeriodicity())
+                .capacity(event.getCapacity())
+                .ticketLink(event.getTicketLink())
+                .tags(event.getTags())
+                .imageUrls(event.getImages().stream().map(EventImage::getUrl).toList())
+                .attractions(event.getAttractions().stream().map(Attraction::getName).toList())
+                .ownerName(event.getOwnerUser().getName())
+                .build();
     }
 }
