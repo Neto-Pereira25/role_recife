@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import br.recife.eventos.eventos_api.dto.event.EventCreateDTO;
+import br.recife.eventos.eventos_api.dto.event.EventFilter;
 import br.recife.eventos.eventos_api.dto.event.EventResponseDTO;
 import br.recife.eventos.eventos_api.exceptions.ResourceNotFoundException;
 import br.recife.eventos.eventos_api.models.entities.Attraction;
@@ -17,6 +19,7 @@ import br.recife.eventos.eventos_api.models.entities.Event.EventType;
 import br.recife.eventos.eventos_api.repositories.auxiliary.AttractionRepository;
 import br.recife.eventos.eventos_api.repositories.auxiliary.EventImageRepository;
 import br.recife.eventos.eventos_api.repositories.event.EventRepository;
+import br.recife.eventos.eventos_api.repositories.specification.EventSpecification;
 import br.recife.eventos.eventos_api.repositories.user.EventOwnerUserRepository;
 
 @Service
@@ -121,5 +124,14 @@ public class EventService {
                 .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado com id: " + id));
 
         return mapToDTO(event);
+    }
+
+    public List<EventResponseDTO> searchEvents(EventFilter filter) {
+        Specification<Event> spec = EventSpecification.withFilters(filter);
+        List<Event> results = eventRepository.findAll(spec);
+
+        return results.stream()
+                .map(this::mapToDTO)
+                .toList();
     }
 }
