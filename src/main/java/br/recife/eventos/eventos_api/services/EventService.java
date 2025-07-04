@@ -115,4 +115,11 @@ public class EventService {
                 .ownerName(event.getOwnerUser().getName())
                 .build();
     }
+
+    public EventResponseDTO getEventById(Long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado com id: " + id));
+
+        return mapToDTO(event);
+    }
 }
