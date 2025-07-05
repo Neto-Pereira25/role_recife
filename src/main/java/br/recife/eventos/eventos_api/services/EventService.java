@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import br.recife.eventos.eventos_api.dto.event.EventCreateDTO;
@@ -13,9 +15,9 @@ import br.recife.eventos.eventos_api.dto.event.EventResponseDTO;
 import br.recife.eventos.eventos_api.exceptions.ResourceNotFoundException;
 import br.recife.eventos.eventos_api.models.entities.Attraction;
 import br.recife.eventos.eventos_api.models.entities.Event;
+import br.recife.eventos.eventos_api.models.entities.Event.EventType;
 import br.recife.eventos.eventos_api.models.entities.EventImage;
 import br.recife.eventos.eventos_api.models.entities.EventOwnerUser;
-import br.recife.eventos.eventos_api.models.entities.Event.EventType;
 import br.recife.eventos.eventos_api.repositories.auxiliary.AttractionRepository;
 import br.recife.eventos.eventos_api.repositories.auxiliary.EventImageRepository;
 import br.recife.eventos.eventos_api.repositories.event.EventRepository;
@@ -39,7 +41,8 @@ public class EventService {
     }
 
     public Event createEvent(EventCreateDTO eventDto) {
-        EventOwnerUser ownerUser = eventOwnerUserRepository.findById(eventDto.getEventOwnerId())
+        Long ownerId = getAuthenticatedUserId();
+        EventOwnerUser ownerUser = eventOwnerUserRepository.findById(ownerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Dono do evento não encontrado"));
 
         if (eventDto.getEventType() == EventType.PAID_EVENT && (eventDto.getTicketLink() == null)) {
@@ -133,5 +136,12 @@ public class EventService {
         return results.stream()
                 .map(this::mapToDTO)
                 .toList();
+    }
+
+    private Long getAuthenticatedUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String subject = authentication.getName();
+        String[] parts = subject.split("-");
+        return Long.parseLong(parts[0]);
     }
 }

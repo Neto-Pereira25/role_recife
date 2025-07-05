@@ -52,7 +52,4 @@ public class EventCreateDTO {
     private List<String> attractions;
 
     private List<String> imageUrls;
-
-    @NotNull(message = "O ID do dono do evento é requerido.")
-    private Long eventOwnerId;
 }
