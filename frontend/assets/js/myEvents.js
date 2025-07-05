@@ -43,13 +43,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     try {
-        const cached = localStorage.getItem("owner-events");
+        // const cached = localStorage.getItem("owner-events");
 
-        if (cached) {
-            const savedEvents = JSON.parse(cached);
-            renderEvents(savedEvents);
-            return;
-        }
+        // if (cached) {
+        //     const savedEvents = JSON.parse(cached);
+        //     renderEvents(savedEvents);
+        //     return;
+        // }
 
         const response = await fetch("http://localhost:8080/api/events/mine", {
             method: "GET",
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Redirecionar para página de edição
 function editarEvento(id) {
-    window.location.href = `editar-evento.html?id=${id}`;
+    window.location.href = `update.html?id=${id}`;
 }
 
 // Exclusão com confirmação

@@ -15,9 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="col-md-6">
                 <input type="text" class="form-control" placeholder="Nome da atração" name="attractionName" required>
             </div>
-            <div class="col-md-5">
-                <input type="text" class="form-control" placeholder="Tipo da atração" name="attractionType" required>
-            </div>
             <div class="col-md-1 text-end">
                 <button type="button" class="btn btn-danger btn-sm remove-btn">&times;</button>
             </div>
@@ -65,9 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const eventData = {
             name: document.getElementById("name").value,
             location: document.getElementById("location").value,
-            dateHour: document.getElementById("dateHour").value,
+            dateTime: document.getElementById("dateHour").value,
             capacity: parseInt(document.getElementById("capacity").value),
-            ageGroup: document.getElementById("ageGroup").value,
+            ageRating: document.getElementById("ageGroup").value,
             spaceType: document.getElementById("spaceType").value,
             periodicity: document.getElementById("periodicity").value,
             eventType: document.getElementById("eventType").value,
@@ -81,50 +78,48 @@ document.addEventListener("DOMContentLoaded", () => {
         // Coleta imagens
         document.querySelectorAll("input[name='imageUrl']").forEach(input => {
             if (input.value.trim()) {
-                eventData.images.push({ url: input.value.trim() });
+                eventData.images.push(input.value.trim());
             }
         });
 
         // Coleta atrações
         const names = document.querySelectorAll("input[name='attractionName']");
-        const types = document.querySelectorAll("input[name='attractionType']");
 
         for (let i = 0; i < names.length; i++) {
-            if (names[i].value.trim() && types[i].value.trim()) {
-                eventData.attractions.push({
-                    name: names[i].value.trim(),
-                    type: types[i].value.trim()
-                });
+            if (names[i].value.trim()) {
+                eventData.attractions.push(names[i].value.trim());
             }
         }
 
         console.log(eventData);
 
-        // try {
-        //     const response = await fetch("http://localhost:8080/api/events", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             "Authorization": `Bearer ${token}`
-        //         },
-        //         body: JSON.stringify(eventData)
-        //     });
+        try {
+            const response = await fetch("http://localhost:8080/api/events", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(eventData)
+            });
 
-        //     const data = await response.json();
+            const data = await response.json();
 
-        //     if (!response.ok) {
-        //         throw new Error(data.message || "Erro ao criar evento.");
-        //     }
+            if (!response.ok) {
+                console.log(response);
+                throw new Error(response.message || "Erro ao criar evento.");
+            }
 
-        //     showAlert("success", "Evento criado com sucesso!");
-        //     createEventForm.reset();
-        //     attractionsContainer.innerHTML = "";
-        //     imagesContainer.innerHTML = "";
+            showAlert("success", "Evento criado com sucesso!");
+            createEventForm.reset();
+            attractionsContainer.innerHTML = "";
+            imagesContainer.innerHTML = "";
 
-        // } catch (error) {
-        //     console.error(error);
-        //     showAlert("danger", error.message);
-        // }
+            window.location.href = "myEvents.html";
+        } catch (error) {
+            console.error(error);
+            showAlert("danger", error.message);
+        }
     });
 
     function showAlert(type, message) {
