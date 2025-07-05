@@ -2,6 +2,7 @@ package br.recife.eventos.eventos_api.services;
 
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +24,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final CommonUserRepository commonUserRepository;
     private final EventOwnerUserRepository eventOwnerUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, CommonUserRepository commonUserRepository,
-            EventOwnerUserRepository eventOwnerUserRepository) {
+            EventOwnerUserRepository eventOwnerUserRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.commonUserRepository = commonUserRepository;
         this.eventOwnerUserRepository = eventOwnerUserRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -38,7 +41,7 @@ public class UserService {
         CommonUser user = new CommonUser();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setNeighborhood(userDto.getNeighborhood());
         user.setType(UsersType.COMMON_USER);
 
@@ -51,7 +54,7 @@ public class UserService {
         EventOwnerUser user = new EventOwnerUser();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setCpfCnpj(userDto.getCpfCnpj());
         user.setType(UsersType.EVENT_OWNER_USER);
 
