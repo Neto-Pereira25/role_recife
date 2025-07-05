@@ -60,7 +60,9 @@ public class EventController {
     @PreAuthorize("hasRole('EVENT_OWNER_USER')")
     @PutMapping("/{id}")
     public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable Long id, @Valid @RequestBody EventUpdateDTO dto) {
-        return ResponseEntity.ok(eventService.updateEvent(id, dto));
+
+        Event updated = eventService.updateEvent(id, dto);
+        return ResponseEntity.ok(eventService.mapToDTO(updated));
     }
 
     @PreAuthorize("hasRole('EVENT_OWNER_USER')")

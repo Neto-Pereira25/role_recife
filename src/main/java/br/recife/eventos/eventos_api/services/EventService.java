@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.recife.eventos.eventos_api.dto.event.EventCreateDTO;
 import br.recife.eventos.eventos_api.dto.event.EventFilter;
@@ -130,52 +131,61 @@ public class EventService {
         return mapToDTO(event);
     }
 
-    public EventResponseDTO updateEvent(Long id, EventUpdateDTO dto) {
-        Long userId = getAuthenticatedUserId();
-
+    @Transactional
+    public Event updateEvent(Long id, EventUpdateDTO eventDto) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado com id: " + id));
 
-        if (!event.getOwnerUser().getId().equals(userId)) {
-            throw new SecurityException("Você não tem permissão para editar este evento.");
+        // Atualiza dados básicos do evento
+        event.setName(eventDto.getName());
+        event.setDescription(eventDto.getDescription());
+        event.setLocation(eventDto.getLocation());
+        event.setDateHour(eventDto.getDateTime());
+        event.setAgeGroup(eventDto.getAgeRating());
+        event.setEventType(eventDto.getEventType());
+        event.setSpaceType(eventDto.getSpaceType());
+        event.setCapacity(eventDto.getCapacity());
+        event.setPeriodicity(eventDto.getPeriodicity());
+        event.setTicketLink(eventDto.getTicketLink());
+        event.setTags(eventDto.getTags());
+
+        // --- LIMPA IMAGENS ANTIGAS ---
+        List<EventImage> oldImages = new ArrayList<>(event.getImages());
+        for (EventImage image : oldImages) {
+            image.setEvent(null); // quebra vínculo
+            eventImageRepository.delete(image); // remove do banco
+        }
+        event.getImages().clear(); // remove da lista vinculada
+
+        // Adiciona novas imagens
+        if (eventDto.getImageUrls() != null) {
+            for (String url : eventDto.getImageUrls()) {
+                EventImage newImage = new EventImage();
+                newImage.setUrl(url);
+                newImage.setEvent(event);
+                event.getImages().add(newImage);
+            }
         }
 
-        event.setName(dto.getName());
-        event.setDescription(dto.getDescription());
-        event.setLocation(dto.getLocation());
-        event.setDateHour(dto.getDateTime());
-        event.setAgeGroup(dto.getAgeRating());
-        event.setEventType(dto.getEventType());
-        event.setSpaceType(dto.getSpaceType());
-        event.setCapacity(dto.getCapacity());
-        event.setPeriodicity(dto.getPeriodicity());
-        event.setTicketLink(dto.getTicketLink());
-        event.setTags(dto.getTags());
+        // --- LIMPA ATRAÇÕES ANTIGAS ---
+        List<Attraction> oldAttractions = new ArrayList<>(event.getAttractions());
+        for (Attraction attraction : oldAttractions) {
+            attraction.setEvent(null);
+            attractionRepository.delete(attraction);
+        }
+        event.getAttractions().clear();
 
-        if (dto.getImageUrls() != null && dto.getImageUrls().size() <= 5) {
-            eventImageRepository.deleteAll(event.getImages());
-            List<EventImage> images = dto.getImageUrls().stream().map(url -> {
-                EventImage img = new EventImage();
-                img.setUrl(url);
-                img.setEvent(event);
-                return img;
-            }).toList();
-            eventImageRepository.saveAll(images);
+        // Adiciona novas atrações
+        if (eventDto.getAttractions() != null) {
+            for (String name : eventDto.getAttractions()) {
+                Attraction newAttraction = new Attraction();
+                newAttraction.setName(name);
+                newAttraction.setEvent(event);
+                event.getAttractions().add(newAttraction);
+            }
         }
 
-        if (dto.getAttractions() != null) {
-            attractionRepository.deleteAll(event.getAttractions());
-            List<Attraction> attractions = dto.getAttractions().stream().map(name -> {
-                Attraction attraction = new Attraction();
-                attraction.setName(name);
-                attraction.setEvent(event);
-                return attraction;
-            }).toList();
-            attractionRepository.saveAll(attractions);
-        }
-
-        Event updatedEvent = eventRepository.save(event);
-        return mapToDTO(updatedEvent);
+        return eventRepository.save(event);
     }
 
     public void deleteEvent(Long id) {

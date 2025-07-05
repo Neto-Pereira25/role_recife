@@ -1,6 +1,7 @@
 package br.recife.eventos.eventos_api.models.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -69,11 +70,11 @@ public class Event {
     @JoinColumn(name = "id_owner_user")
     private EventOwnerUser ownerUser;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<Attraction> attractions;
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attraction> attractions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<EventImage> images;
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EventImage> images = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "tag")
