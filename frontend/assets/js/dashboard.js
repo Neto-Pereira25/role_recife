@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     userTypeInfo.textContent = "Você está logado como Dono de Evento.";
     actions.innerHTML = `
           <div class="col-md-4 mb-3">
-            <a href="create-event.html" class="btn btn-outline-primary w-100">Criar Evento</a>
+            <a href="events/create.html" class="btn btn-outline-primary w-100">Criar Evento</a>
           </div>
           <div class="col-md-4 mb-3">
             <a href="my-events.html" class="btn btn-outline-success w-100">Meus Eventos</a>
