@@ -9,4 +9,6 @@ import br.recife.eventos.eventos_api.models.entities.Event;
 
 public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
     List<Event> findByNameContainingIgnoreCase(String name);
+
+    List<Event> findByOwnerUserId(Long ownerId);
 }

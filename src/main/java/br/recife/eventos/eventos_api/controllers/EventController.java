@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.recife.eventos.eventos_api.config.JwtTokenUtil;
 import br.recife.eventos.eventos_api.dto.event.EventCreateDTO;
 import br.recife.eventos.eventos_api.dto.event.EventFilter;
 import br.recife.eventos.eventos_api.dto.event.EventResponseDTO;
@@ -33,9 +35,11 @@ import jakarta.validation.Valid;
 public class EventController {
 
     private final EventService eventService;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, JwtTokenUtil jwtTokenUtil) {
         this.eventService = eventService;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
     @PreAuthorize("hasRole('EVENT_OWNER_USER')")
@@ -57,6 +61,29 @@ public class EventController {
     public ResponseEntity<EventResponseDTO> getEventById(@PathVariable Long id) {
         EventResponseDTO event = eventService.getEventById(id);
         return ResponseEntity.ok(event);
+    }
+
+    @PreAuthorize("hasRole('EVENT_OWNER_USER')")
+    @GetMapping("/mine")
+    public ResponseEntity<?> getOwnerEvents(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            String[] user = jwtTokenUtil.getSubjectFromToken(token).split("-");
+
+            Long userId = Long.parseLong(user[0]);
+
+            System.out.println("\n\nToken do usuário: " + token);
+            System.out.println("\n\nEmail do usuário: " + userId);
+
+            if (!user[1].equals("EVENT_OWNER_USER")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso restrito à donos de evento.");
+            }
+
+            List<Event> myEvents = eventService.getEventsByOwner(userId);
+            return ResponseEntity.ok(myEvents);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido ou expirado");
+        }
     }
 
     @PreAuthorize("hasRole('EVENT_OWNER_USER')")

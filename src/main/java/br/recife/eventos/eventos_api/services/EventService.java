@@ -131,6 +131,10 @@ public class EventService {
         return mapToDTO(event);
     }
 
+    public List<Event> getEventsByOwner(Long ownerId) {
+        return eventRepository.findByOwnerUserId(ownerId);
+    }
+
     @Transactional
     public Event updateEvent(Long id, EventUpdateDTO eventDto) {
         Event event = eventRepository.findById(id)
