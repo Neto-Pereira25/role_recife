@@ -1,0 +1,31 @@
+package br.recife.eventos.eventos_api.controllers;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.recife.eventos.eventos_api.dto.user.LoginRequestDTO;
+import br.recife.eventos.eventos_api.dto.user.LoginResponseDTO;
+import br.recife.eventos.eventos_api.services.AuthService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
+        LoginResponseDTO response = authService.authenticate(request);
+
+        return ResponseEntity.ok(response);
+    }
+}
