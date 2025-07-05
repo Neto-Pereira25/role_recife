@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import br.recife.eventos.eventos_api.dto.event.EventCreateDTO;
 import br.recife.eventos.eventos_api.dto.event.EventFilter;
 import br.recife.eventos.eventos_api.dto.event.EventResponseDTO;
+import br.recife.eventos.eventos_api.dto.event.EventUpdateDTO;
 import br.recife.eventos.eventos_api.exceptions.ResourceNotFoundException;
 import br.recife.eventos.eventos_api.models.entities.Attraction;
 import br.recife.eventos.eventos_api.models.entities.Event;
@@ -127,6 +128,67 @@ public class EventService {
                 .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado com id: " + id));
 
         return mapToDTO(event);
+    }
+
+    public EventResponseDTO updateEvent(Long id, EventUpdateDTO dto) {
+        Long userId = getAuthenticatedUserId();
+
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado"));
+
+        if (!event.getOwnerUser().getId().equals(userId)) {
+            throw new SecurityException("Você não tem permissão para editar este evento.");
+        }
+
+        event.setName(dto.getName());
+        event.setDescription(dto.getDescription());
+        event.setLocation(dto.getLocation());
+        event.setDateHour(dto.getDateTime());
+        event.setAgeGroup(dto.getAgeRating());
+        event.setEventType(dto.getEventType());
+        event.setSpaceType(dto.getSpaceType());
+        event.setCapacity(dto.getCapacity());
+        event.setPeriodicity(dto.getPeriodicity());
+        event.setTicketLink(dto.getTicketLink());
+        event.setTags(dto.getTags());
+
+        if (dto.getImageUrls() != null && dto.getImageUrls().size() <= 5) {
+            eventImageRepository.deleteAll(event.getImages());
+            List<EventImage> images = dto.getImageUrls().stream().map(url -> {
+                EventImage img = new EventImage();
+                img.setUrl(url);
+                img.setEvent(event);
+                return img;
+            }).toList();
+            eventImageRepository.saveAll(images);
+        }
+
+        if (dto.getAttractions() != null) {
+            attractionRepository.deleteAll(event.getAttractions());
+            List<Attraction> attractions = dto.getAttractions().stream().map(name -> {
+                Attraction attraction = new Attraction();
+                attraction.setName(name);
+                attraction.setEvent(event);
+                return attraction;
+            }).toList();
+            attractionRepository.saveAll(attractions);
+        }
+
+        Event updatedEvent = eventRepository.save(event);
+        return mapToDTO(updatedEvent);
+    }
+
+    public void deleteEvent(Long id) {
+        Long userId = getAuthenticatedUserId();
+
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado."));
+
+        if (!event.getOwnerUser().getId().equals(userId)) {
+            throw new SecurityException("Você não tem permissão para excluir este evento.");
+        }
+
+        eventRepository.delete(event);
     }
 
     public List<EventResponseDTO> searchEvents(EventFilter filter) {
