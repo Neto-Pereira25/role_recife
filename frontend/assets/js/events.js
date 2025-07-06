@@ -71,14 +71,14 @@ document.addEventListener("DOMContentLoaded", () => {
             description: document.getElementById("description").value,
             ticketLink: document.getElementById("ticketLink").value || null,
             tags: document.getElementById("tags").value.split(",").map(tag => tag.trim()).filter(Boolean),
-            images: [],
+            imageUrls: [],
             attractions: []
         };
 
         // Coleta imagens
         document.querySelectorAll("input[name='imageUrl']").forEach(input => {
             if (input.value.trim()) {
-                eventData.images.push(input.value.trim());
+                eventData.imageUrls.push(input.value.trim());
             }
         });
 
