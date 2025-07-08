@@ -1,0 +1,32 @@
+/* Estilo da logo no navbar */
+.logo-icon-nav {
+    font-size: 1.8rem;
+    color: #fff;
+    animation: spin 8s linear infinite;
+}
+
+.logo-text-nav {
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.logo-subtext-nav {
+    font-family: "Roboto", sans-serif;
+    font-size: 0.7rem;
+    color: #ccc;
+    line-height: 1;
+}
+
+/* Animação da logo */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
