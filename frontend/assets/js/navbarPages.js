@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.prepend(navbarContainer);
 
             const token = localStorage.getItem("token");
-            const user = JSON.parse(localStorage.getItem("userName"));
+            const user = localStorage.getItem("userName");
+            const userType = localStorage.getItem("role");
 
             if (token && user) {
                 // Mostrar elementos de usuário logado
@@ -16,11 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("userNameDisplay").textContent = `Olá, ${user}`;
                 document.getElementById("loginBtn").classList.add("d-none");
                 document.getElementById("registerBtn").classList.add("d-none");
+                document.getElementById("dashboardLink").classList.remove("d-none");
 
                 // Mostrar links de dono de evento
-                if (user.type === "EVENT_OWNER_USER") {
+                if (userType === "EVENT_OWNER_USER") {
                     document.getElementById("myEventsLink").classList.remove("d-none");
-                    document.getElementById("dashboardLink").classList.remove("d-none");
                 }
             }
         });
@@ -28,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.logout = function () {
         localStorage.removeItem("token");
         localStorage.removeItem("userName");
+        localStorage.removeItem("role");
         window.location.href = "./index.html";
     };
 });

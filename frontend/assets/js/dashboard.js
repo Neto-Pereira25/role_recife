@@ -37,11 +37,4 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     userTypeInfo.textContent = "Tipo de usuário desconhecido.";
   }
-
-  document.getElementById("logoutBtn").addEventListener("click", () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("userName");
-    window.location.href = "login.html";
-  });
 });
