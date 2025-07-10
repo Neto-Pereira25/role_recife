@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="./assets/styles/index.css" />
     <link rel="stylesheet" href="./assets/styles/navbar.css" />
     <script src="./assets/js/navbarIndex.js" defer></script>
+    <script src="./assets/js/index.js" defer></script>
   </head>
   <body class="bg-light">
     <main class="container mt-5">
@@ -34,19 +35,6 @@
             Explore festas, shows, feiras e muito mais. Cadastre-se agora e
             fique por dentro!
           </p>
-
-          <div class="mt-4">
-            <a
-              href="./assets/pages/register.html"
-              class="btn btn-primary btn-lg me-2"
-              >Cadastrar</a
-            >
-            <a
-              href="./assets/pages/login.html"
-              class="btn btn-outline-secondary btn-lg"
-              >Entrar</a
-            >
-          </div>
         </div>
 
         <div class="col-md-6 mt-5 mt-md-0 text-center">
@@ -58,6 +46,15 @@
             </div>
           </div>
         </div>
+
+        <!-- Loader -->
+        <div id="loader" class="text-center my-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+          </div>
+        </div>
+
+        <div id="eventList" class="row g-4"></div>
       </div>
     </main>
 
