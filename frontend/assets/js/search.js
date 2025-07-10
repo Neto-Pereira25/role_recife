@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p class="card-text">${event.description.slice(0, 100)}...</p>
                     <p class="text-muted mb-1"><i class="fas fa-map-marker-alt me-1"></i>${event.location}</p>
                     <p class="text-muted"><i class="far fa-calendar-alt me-1"></i>${formatDate(event.dateHour)}</p>
-                    <a href="#" class="btn btn-outline-primary btn-sm">Ver Detalhes</a>
+                    <a href="../../pages/events/eventDetails.html?id=${event.id}" class="btn btn-outline-primary btn-sm">Ver Detalhes</a>
                 </div>
                 </div>
             </div>

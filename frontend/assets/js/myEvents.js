@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <p class="card-text"><strong>Tipo:</strong> ${event.eventType}</p>
                         <p class="card-text"><strong>Capacidade:</strong> ${event.capacity}</p>
                         <div class="d-flex justify-content-end gap-2">
+                            <a class="btn btn-outline-secondary btn-sm" href="../../pages/events/eventDetails.html?id=${event.id}">Detalhes</a>
                             <button class="btn btn-outline-primary btn-sm" onclick="editarEvento(${event.id})">Editar</button>
                             <button class="btn btn-outline-danger btn-sm" onclick="excluirEvento(${event.id})">Excluir</button>
                         </div>
