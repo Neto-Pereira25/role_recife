@@ -1,0 +1,14 @@
+/* search.css */
+
+.card-event {
+    transition: transform 0.2s ease;
+}
+
+.card-event:hover {
+    transform: scale(1.02);
+}
+
+.card-img-top {
+    height: 180px;
+    object-fit: cover;
+}
