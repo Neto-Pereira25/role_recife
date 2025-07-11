@@ -1,5 +1,12 @@
 const urlParams = new URLSearchParams(window.location.search);
+const token = localStorage.getItem("token");
+const role = localStorage.getItem("role");
+const userId = localStorage.getItem("userId");
+
 const eventId = urlParams.get("id");
+const interestBtn = document.getElementById("interestBtn");
+const loader = document.getElementById("loader");
+const detailsContainer = document.getElementById("detailsContainer");
 
 let imageIndex = 0;
 let imageUrls = [];
@@ -27,6 +34,41 @@ document.addEventListener("DOMContentLoaded", async () => {
         imageIndex = (imageIndex + 1) % imageUrls.length;
         document.getElementById("eventImage").src = imageUrls[imageIndex];
     });
+
+    if (token && role === "COMMON_USER") {
+        interestBtn.classList.remove("d-none");
+
+        interestBtn.addEventListener('click', async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/favorites/${userId}/${eventId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    const erroBody = await response.json();
+                    // console.log(response);
+                    console.log(erroBody);
+                    throw new Error(erroBody.message);
+                }
+
+                interestBtn.innerHTML = `<i class="fa-solid fa-heart me-2"></i>Interesse Registrado`;
+                interestBtn.classList.remove("btn-outline-primary");
+                interestBtn.classList.add("btn-success");
+                interestBtn.disabled = true;
+            } catch (error) {
+                interestBtn.innerHTML = `<i class="fa-solid fa-heart me-2"></i>${error.message}`;
+                interestBtn.classList.remove("btn-outline-primary");
+                interestBtn.classList.add("btn-danger");
+                interestBtn.disabled = true;
+                console.error(error);
+                console.error(error.message);
+            }
+        });
+    }
 });
 
 function renderEventDetails(event) {
@@ -73,6 +115,9 @@ function renderEventDetails(event) {
     } else {
         document.getElementById("eventImage").src = "https://via.placeholder.com/400x250?text=Sem+Imagem";
     }
+
+    loader.classList.add("d-none");
+    detailsContainer.classList.remove("d-none");
 }
 
 function formatDate(dateTimeStr) {

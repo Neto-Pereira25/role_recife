@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
     window.logout = function () {
         localStorage.removeItem("token");
         localStorage.removeItem("userName");
+        localStorage.removeItem("role");
+        localStorage.removeItem("userId");
         window.location.href = "./index.html";
     };
 });

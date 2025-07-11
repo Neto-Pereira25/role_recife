@@ -18,10 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
     userTypeInfo.textContent = "Você está logado como Usuário Comum.";
     actions.innerHTML = `
           <div class="col-md-4 mb-3">
-            <a href="explore-events.html" class="btn btn-outline-primary w-100">Explorar Eventos</a>
+            <a href="../pages/events/search.html" class="btn btn-outline-primary w-100">Explorar Eventos</a>
           </div>
           <div class="col-md-4 mb-3">
-            <a href="interests.html" class="btn btn-outline-success w-100">Meus Interesses</a>
+            <a href="../pages/events/myFavorites.html" class="btn btn-outline-success w-100">Meus Interesses</a>
           </div>
         `;
   } else if (role === "EVENT_OWNER_USER") {

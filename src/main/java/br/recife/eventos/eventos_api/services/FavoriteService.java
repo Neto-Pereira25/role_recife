@@ -15,54 +15,54 @@ import br.recife.eventos.eventos_api.repositories.user.CommonUserRepository;
 @Service
 public class FavoriteService {
 
-    private final FavoriteRepository favoriteRepository;
-    private final EventRepository eventRepository;
-    private final CommonUserRepository userRepository;
+        private final FavoriteRepository favoriteRepository;
+        private final EventRepository eventRepository;
+        private final CommonUserRepository userRepository;
 
-    public FavoriteService(FavoriteRepository favoriteRepository, EventRepository eventRepository,
-            CommonUserRepository userRepository) {
-        this.favoriteRepository = favoriteRepository;
-        this.eventRepository = eventRepository;
-        this.userRepository = userRepository;
-    }
-
-    public void markFavorite(Long userId, Long eventId) {
-        CommonUser user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
-
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado"));
-
-        if (favoriteRepository.existsByUserAndEvent(user, event)) {
-            throw new IllegalStateException("Usuário já favoritou esse evento.");
+        public FavoriteService(FavoriteRepository favoriteRepository, EventRepository eventRepository,
+                        CommonUserRepository userRepository) {
+                this.favoriteRepository = favoriteRepository;
+                this.eventRepository = eventRepository;
+                this.userRepository = userRepository;
         }
 
-        Favorite favorite = new Favorite();
-        favorite.setUser(user);
-        favorite.setEvent(event);
-        favoriteRepository.save(favorite);
-    }
+        public void markFavorite(Long userId, Long eventId) {
+                CommonUser user = userRepository.findById(userId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
-    public List<Event> getFavorites(Long userId) {
-        CommonUser user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+                Event event = eventRepository.findById(eventId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado"));
 
-        return favoriteRepository.findByUser(user)
-                .stream()
-                .map(Favorite::getEvent)
-                .toList();
-    }
+                if (favoriteRepository.existsByUserAndEvent(user, event)) {
+                        throw new IllegalStateException("Usuário já favoritou esse evento.");
+                }
 
-    public void removeFavorite(Long userId, Long eventId) {
-        CommonUser user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado."));
+                Favorite favorite = new Favorite();
+                favorite.setUser(user);
+                favorite.setEvent(event);
+                favoriteRepository.save(favorite);
+        }
 
-        Favorite favorite = favoriteRepository.findByUserAndEvent(user, event)
-                .orElseThrow(() -> new ResourceNotFoundException("Evento Favorito não encontrado."));
+        public List<Event> getFavorites(Long userId) {
+                CommonUser user = userRepository.findById(userId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
-        favoriteRepository.delete(favorite);
-    }
+                return favoriteRepository.findByUser(user)
+                                .stream()
+                                .map(Favorite::getEvent)
+                                .toList();
+        }
+
+        public void removeFavorite(Long userId, Long eventId) {
+                CommonUser user = userRepository.findById(userId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
+                Event event = eventRepository.findById(eventId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado."));
+
+                Favorite favorite = favoriteRepository.findByUserAndEvent(user, event)
+                                .orElseThrow(() -> new ResourceNotFoundException("Evento Favorito não encontrado."));
+
+                favoriteRepository.delete(favorite);
+        }
 
 }

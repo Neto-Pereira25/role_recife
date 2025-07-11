@@ -30,10 +30,17 @@ public class FavoriteController {
     }
 
     @PostMapping("/{userId}/{eventId}")
-    public ResponseEntity<Void> addFavorite(@PathVariable Long userId, @PathVariable Long eventId) {
-        favoriteService.markFavorite(userId, eventId);
+    public ResponseEntity<?> addFavorite(@PathVariable Long userId, @PathVariable Long eventId) {
+        try {
+            favoriteService.markFavorite(userId, eventId);
 
-        return ResponseEntity.ok().build();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            System.out.println();
+            System.out.println(e.getMessage());
+            System.out.println();
+            return ResponseEntity.badRequest().body(e);
+        }
     }
 
     @DeleteMapping("/{userId}/{eventId}")
