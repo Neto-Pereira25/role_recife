@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Mostrar elementos de usuário logado
                 document.getElementById("logoutBtn").classList.remove("d-none");
                 document.getElementById("userWelcome").classList.remove("d-none");
-                document.getElementById("userNameDisplay").textContent = `Olá, ${user}`;
+                // document.getElementById("userNameDisplay").textContent = `Olá, ${user}`;
                 document.getElementById("loginBtn").classList.add("d-none");
                 document.getElementById("registerBtn").classList.add("d-none");
                 document.getElementById("dashboardLink").classList.remove("d-none");

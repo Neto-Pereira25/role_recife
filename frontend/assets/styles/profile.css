@@ -1,0 +1,26 @@
+/* styles/profile.css */
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: #343a40;
+}
+
+.card {
+    border-radius: 15px;
+    background-color: #ffffff;
+    border: none;
+}
+
+label {
+    font-weight: 500;
+}
+
+input[disabled] {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+}

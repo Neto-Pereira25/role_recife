@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("role", data.userType);
             localStorage.setItem("userName", data.userName);
             localStorage.setItem("userId", data.userId);
+            localStorage.setItem("user", JSON.stringify(data));
 
             // Redireciona com base na role
             if (data.userType === "EVENT_OWNER_USER") {
