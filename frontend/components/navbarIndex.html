@@ -22,36 +22,62 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link" href="../frontend/index.html">Início</a>
+          <a class="nav-link" href="../frontend/index.html">
+            <i class="fa fa-home text-white me-2" aria-hidden="true"></i>
+            Início
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../frontend/assets/pages/events/search.html"
-            >Buscar Eventos</a
+          <a
+            class="nav-link"
+            href="../frontend/assets/pages/events/search.html"
           >
+            <i class="fa fa-search text-white me-2" aria-hidden="true"></i>
+            Buscar Eventos
+          </a>
         </li>
         <!-- Links específicos para usuário logado -->
         <li class="nav-item d-none" id="myEventsLink">
-          <a class="nav-link" href="/pages/events/myEvents.html"
-            >Meus Eventos</a
-          >
+          <a class="nav-link" href="/pages/events/myEvents.html">
+            <i
+              class="fa fa-calendar-alt text-white me-2"
+              aria-hidden="true"
+            ></i>
+            Meus Eventos
+          </a>
         </li>
         <li class="nav-item d-none" id="dashboardLink">
-          <a class="nav-link" href="/pages/dashboard.html">Dashboard</a>
+          <a class="nav-link" href="/pages/dashboard.html">
+            <i class="fa fa-cube text-white me-2" aria-hidden="true"></i>
+            Dashboard
+          </a>
         </li>
       </ul>
 
       <ul class="navbar-nav">
         <li class="nav-item d-none" id="userWelcome">
-          <span class="navbar-text me-2" id="userNameDisplay"></span>
+          <a class="nav-link" href="./profile.html">
+            <i class="fa fa-user-circle text-white me-2" aria-hidden="true"></i>
+            Perfil
+          </a>
         </li>
         <li class="nav-item d-none" id="logoutBtn">
-          <a class="nav-link" href="#" onclick="logout()">Sair</a>
+          <a class="nav-link" href="#" onclick="logout()">
+            <i class="fa fa-sign-out text-white me-2" aria-hidden="true"></i>
+            Sair
+          </a>
         </li>
         <li class="nav-item" id="loginBtn">
-          <a class="nav-link" href="./assets/pages/login.html">Login</a>
+          <a class="nav-link" href="./assets/pages/login.html">
+            <i class="fa fa-sign-in text-white me-2" aria-hidden="true"></i>
+            Login
+          </a>
         </li>
         <li class="nav-item" id="registerBtn">
-          <a class="nav-link" href="./assets/pages/register.html">Registrar</a>
+          <a class="nav-link" href="./assets/pages/register.html">
+            <i class="fa fa-user-plus text-white me-2" aria-hidden="true"></i>
+            Registrar
+          </a>
         </li>
       </ul>
     </div>

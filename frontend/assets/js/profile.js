@@ -16,30 +16,39 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("userType").value =
         user.userType === "COMMON_USER" ? "Usuário Comum" : "Dono de Evento";
 
-    // Buscar os interesses, se houver rota backend
-    fetch(`http://localhost:8080/api/favorites/${user.userId}`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    })
-        .then((res) => {
-            if (!res.ok) throw new Error("Erro ao carregar interesses");
-            return res.json();
+
+    if (user.userType === "COMMON_USER") {
+        // Buscar os interesses, se houver rota backend
+        fetch(`http://localhost:8080/api/favorites/${user.userId}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         })
-        .then((data) => {
-            console.log(data);
-            if (Array.isArray(data) && data.length > 0) {
-                const categorias = data.map((f) => f.name).join(", ");
-                document.getElementById("interests").value = categorias;
-                loader.classList.add("d-none");
-                profile.classList.remove("d-none");
-            } else {
-                document.getElementById("interests").value = "Nenhum interesse cadastrado";
-            }
-        })
-        .catch((err) => {
-            console.error(err);
-            document.getElementById("interests").value = "Erro ao carregar";
-        });
+            .then((res) => {
+                if (!res.ok) throw new Error("Erro ao carregar interesses");
+                return res.json();
+            })
+            .then((data) => {
+                if (Array.isArray(data) && data.length > 0) {
+                    const categorias = data.map((f) => f.name).join(", ");
+                    document.getElementById("interests").value = categorias;
+                    loader.classList.add("d-none");
+                    profile.classList.remove("d-none");
+                } else {
+                    document.getElementById("interests").value = "Nenhum interesse cadastrado";
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                document.getElementById("interests").value = "Erro ao carregar";
+            });
+    } else {
+        document.getElementById("interests").classList.add("d-none");
+        document.getElementById("interestsLabel").classList.add("d-none");
+        loader.classList.add("d-none");
+        profile.classList.remove("d-none");
+    }
+
+
 });
