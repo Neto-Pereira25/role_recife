@@ -28,14 +28,16 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Roboto&display=swap"
       rel="stylesheet"
     />
-    <!-- <link rel="stylesheet" href="../styles/index.css" /> -->
+    <link rel="stylesheet" href="../../styles/style.css" />
     <link rel="stylesheet" href="../../styles/navbar.css" />
-    <script src="../../js/navbarEvents.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="../../styles/events.css" />
+
+    <script src="../../js/navbarEvents.js" defer></script>
+    <script src="../../js/footerEvents.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </head>
-  <body class="bg-light">
-    <div class="container mt-5 py-3">
+  <body class="h-100 bg-light">
+    <main class="container mt-5 py-3">
       <h2 class="mb-4">Editar Evento</h2>
       <div id="alert" class="alert d-none" role="alert"></div>
       <form id="editEventForm">
@@ -165,7 +167,7 @@
           Cancelar
         </a>
       </form>
-    </div>
+    </main>
     <script src="../../js/updateEvent.js"></script>
   </body>
 </html>
