@@ -32,6 +32,42 @@ p.lead {
     color: white;
 }
 
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    color: #2c3e50;
+}
+
+.card-text {
+    color: #555;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
 /* Animação suave da imagem ilustrativa */
 img {
     animation: float 3s ease-in-out infinite;

@@ -12,13 +12,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             const date = new Date(event.dateHour).toLocaleString("pt-BR");
 
             card.innerHTML = `
-                <div class="card card-event shadow-sm h-100">
+                <div class="card h-100">
+                    <img src="${event.imageUrls?.[0] || 'https://via.placeholder.com/400x200'}" class="card-img-top" alt="${event.name}">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-champagne-glasses"></i> ${event.name}</h5>
-                        <p class="card-text">${event.description.slice(0, 100)}...</p>
-                        <p class="text-muted mb-1"><i class="fas fa-map-marker-alt me-1"></i>${event.location}</p>
-                        <p class="text-muted"><i class="far fa-calendar-alt me-1"></i>${formatDate(event.dateHour)}</p>
-                        <a href="./assets/pages/events/eventDetails.html?id=${event.id}" class="btn btn-outline-primary btn-sm">Ver Detalhes</a>
+                    <h5 class="card-title"><i class="fas fa-champagne-glasses"></i> ${event.name}</h5>
+                    <p class="card-text">${event.description.slice(0, 100)}...</p>
+                    <p class="text-muted mb-1"><i class="fas fa-map-marker-alt me-1"></i>${event.location}</p>
+                    <p class="text-muted"><i class="far fa-calendar-alt me-1"></i>${formatDate(event.dateHour)}</p>
+                    <a href="./assets/pages/events/eventDetails.html?id=${event.id}" class="btn btn-outline-primary btn-sm">Ver Detalhes</a>
                     </div>
                 </div>
             `;
