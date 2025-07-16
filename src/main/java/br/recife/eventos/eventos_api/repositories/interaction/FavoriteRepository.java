@@ -15,4 +15,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     Optional<Favorite> findByUserAndEvent(CommonUser user, Event event);
 
     List<Favorite> findByUser(CommonUser user);
+
+    List<Favorite> findByEvent(Event event);
 }

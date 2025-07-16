@@ -1,6 +1,7 @@
 package br.recife.eventos.eventos_api.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,8 @@ import br.recife.eventos.eventos_api.exceptions.ResourceNotFoundException;
 import br.recife.eventos.eventos_api.models.entities.CommonUser;
 import br.recife.eventos.eventos_api.models.entities.Event;
 import br.recife.eventos.eventos_api.models.entities.Favorite;
+import br.recife.eventos.eventos_api.models.entities.User;
+import br.recife.eventos.eventos_api.models.entities.User.UserProfile;
 import br.recife.eventos.eventos_api.repositories.event.EventRepository;
 import br.recife.eventos.eventos_api.repositories.interaction.FavoriteRepository;
 import br.recife.eventos.eventos_api.repositories.user.CommonUserRepository;
@@ -63,6 +66,22 @@ public class FavoriteService {
                                 .orElseThrow(() -> new ResourceNotFoundException("Evento Favorito não encontrado."));
 
                 favoriteRepository.delete(favorite);
+        }
+
+        public List<User> getUsersByFavoriteEvent(Long id) {
+                try {
+                        Event event = eventRepository.findById(id)
+                                        .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado"));
+
+                        List<Favorite> favorites = favoriteRepository.findByEvent(event);
+
+                        return favorites.stream()
+                                        .map(Favorite::getUser)
+                                        .filter(user -> user.getUserProfile() == UserProfile.PUBLIC_USER)
+                                        .collect(Collectors.toList());
+                } catch (Exception e) {
+                        throw e;
+                }
         }
 
 }

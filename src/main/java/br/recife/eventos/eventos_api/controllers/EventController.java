@@ -1,7 +1,9 @@
 package br.recife.eventos.eventos_api.controllers;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,9 @@ import br.recife.eventos.eventos_api.dto.event.EventUpdateDTO;
 import br.recife.eventos.eventos_api.models.entities.Event;
 import br.recife.eventos.eventos_api.models.entities.Event.EventType;
 import br.recife.eventos.eventos_api.models.entities.Event.SpaceType;
+import br.recife.eventos.eventos_api.models.entities.User;
 import br.recife.eventos.eventos_api.services.EventService;
+import br.recife.eventos.eventos_api.services.FavoriteService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -36,10 +40,12 @@ public class EventController {
 
     private final EventService eventService;
     private final JwtTokenUtil jwtTokenUtil;
+    private final FavoriteService favoriteService;
 
-    public EventController(EventService eventService, JwtTokenUtil jwtTokenUtil) {
+    public EventController(EventService eventService, JwtTokenUtil jwtTokenUtil, FavoriteService favoriteService) {
         this.eventService = eventService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.favoriteService = favoriteService;
     }
 
     @PreAuthorize("hasRole('EVENT_OWNER_USER')")
@@ -118,5 +124,18 @@ public class EventController {
 
         List<EventResponseDTO> results = eventService.searchEvents(filter);
         return ResponseEntity.ok(results);
+    }
+
+    @GetMapping("getEventUsers/{id}")
+    public ResponseEntity<?> getEventUsers(@PathVariable Long id) {
+        try {
+            List<User> users = favoriteService.getUsersByFavoriteEvent(id);
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("Erro ao buscar usuários", e.getMessage());
+
+            return ResponseEntity.badRequest().body(error);
+        }
     }
 }

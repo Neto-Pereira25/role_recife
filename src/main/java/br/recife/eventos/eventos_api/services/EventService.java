@@ -131,6 +131,13 @@ public class EventService {
         return mapToDTO(event);
     }
 
+    public Event findById(Long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado com id: " + id));
+
+        return event;
+    }
+
     public List<Event> getEventsByOwner(Long ownerId) {
         return eventRepository.findByOwnerUserId(ownerId);
     }
