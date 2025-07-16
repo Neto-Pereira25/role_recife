@@ -36,29 +36,39 @@ public class UserService {
 
     @Transactional
     public CommonUser registerCommonUser(CommonUserRegisterDTO userDto) {
-        validateUniqueEmail(userDto.getEmail());
+        try {
+            validateUniqueEmail(userDto.getEmail());
 
-        CommonUser user = new CommonUser();
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setNeighborhood(userDto.getNeighborhood());
-        user.setType(UsersType.COMMON_USER);
+            CommonUser user = new CommonUser();
+            user.setName(userDto.getName());
+            user.setEmail(userDto.getEmail());
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            user.setNeighborhood(userDto.getNeighborhood());
+            user.setType(UsersType.COMMON_USER);
+            user.setUserProfile(userDto.getUserProfile());
 
-        return commonUserRepository.save(user);
+            return commonUserRepository.save(user);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 
     public EventOwnerUser registerEventOwnerUser(EventOwnerRegisterDTO userDto) {
-        validateUniqueEmail(userDto.getEmail());
+        try {
+            validateUniqueEmail(userDto.getEmail());
 
-        EventOwnerUser user = new EventOwnerUser();
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setCpfCnpj(userDto.getCpfCnpj());
-        user.setType(UsersType.EVENT_OWNER_USER);
+            EventOwnerUser user = new EventOwnerUser();
+            user.setName(userDto.getName());
+            user.setEmail(userDto.getEmail());
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            user.setCpfCnpj(userDto.getCpfCnpj());
+            user.setUserProfile(userDto.getUserProfile());
+            user.setType(UsersType.EVENT_OWNER_USER);
 
-        return eventOwnerUserRepository.save(user);
+            return eventOwnerUserRepository.save(user);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 
     public Optional<User> findByEmail(String email) {

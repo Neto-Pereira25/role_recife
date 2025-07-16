@@ -40,8 +40,16 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UsersType type;
 
+    @Enumerated(EnumType.STRING)
+    private UserProfile userProfile;
+
     public enum UsersType {
         COMMON_USER,
         EVENT_OWNER_USER
+    }
+
+    public enum UserProfile {
+        PUBLIC_USER,
+        PRIVATE_USER
     }
 }

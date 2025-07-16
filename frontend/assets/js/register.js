@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("registerForm");
     const userType = document.getElementById("userType");
+    const userProfile = document.getElementById("userProfile");
     const neighborhoodField = document.getElementById("neighborhoodField");
     const cpfCnpjField = document.getElementById("cpfCnpjField");
 
@@ -24,11 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
         const type = userType.value;
+        const profile = userProfile.value;
         const neighborhood = document.getElementById("neighborhood").value.trim();
         const cpfCnpj = document.getElementById("cpfCnpj").value.trim();
 
         const payload = {
-            name, email, password, type
+            name, email, password, type, userProfile: profile
         };
 
         if (type === "COMMON_USER") {
@@ -37,6 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (type === "EVENT_OWNER_USER") {
             payload.cpfCnpj = cpfCnpj;
         }
+
+        console.log(payload);
 
         try {
             if (type === "COMMON_USER") {
