@@ -1,0 +1,35 @@
+.avatar-stack {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.avatar-group {
+    display: flex;
+    flex-direction: row;
+    margin-left: 5px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #6c757d;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 2px solid white;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+    margin-right: -15px;
+    /* sobreposição à esquerda */
+    transition: transform 0.2s;
+}
+
+.avatar:hover {
+    z-index: 10;
+    transform: scale(1.1);
+}

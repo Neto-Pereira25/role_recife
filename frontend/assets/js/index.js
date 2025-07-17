@@ -2,10 +2,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     const loader = document.getElementById("loader");
     const eventList = document.getElementById("eventList");
 
+    const renderUsers = (users) => {
+        return `<div class="avatar-stack">
+            <i class="fas fa-users"></i>
+            <div class="avatar-group">
+                ${users.map(u => {
+            return `<span class="avatar">${u.name[0]}</span>`;
+        })}
+            </div>
+        </div>`;
+    };
+
     const renderEvents = (events) => {
         eventList.innerHTML = "";
 
-        events.forEach(event => {
+        events.forEach(async event => {
+            const users = [];
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/events/getEventUsers/${event.id}`);
+
+                if (!response.ok) {
+                    console.log(response);
+                    throw new Error(response.message || "Erro ao buscar eventos.");
+                }
+
+                const data = await response.json();
+                data.forEach(u => users.push(u));
+            } catch (error) {
+                console.log("Erro ao buscar usuários:", error);
+            }
+
+            console.log(users);
+
             const card = document.createElement("div");
             card.className = "col-md-6";
 
@@ -15,11 +44,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <div class="card h-100">
                     <img src="${event.imageUrls?.[0] || 'https://via.placeholder.com/400x200'}" class="card-img-top" alt="${event.name}">
                     <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-champagne-glasses"></i> ${event.name}</h5>
-                    <p class="card-text">${event.description.slice(0, 100)}...</p>
-                    <p class="text-muted mb-1"><i class="fas fa-map-marker-alt me-1"></i>${event.location}</p>
-                    <p class="text-muted"><i class="far fa-calendar-alt me-1"></i>${formatDate(event.dateHour)}</p>
-                    <a href="./assets/pages/events/eventDetails.html?id=${event.id}" class="btn btn-outline-primary btn-sm">Ver Detalhes</a>
+                        <h5 class="card-title"><i class="fas fa-champagne-glasses"></i> ${event.name}</h5>
+                        <p class="card-text">${event.description.slice(0, 100)}...</p>
+                        <p class="text-muted mb-1"><i class="fas fa-map-marker-alt me-1"></i>${event.location}</p>
+                        <p class="text-muted"><i class="far fa-calendar-alt me-1"></i>${formatDate(event.dateHour)}</p>
+                        <div class="${users.length === 0 ? "d-none" : ""} mb-2 ">
+                            <a href="./assets/pages/teste.html?id=${event.id}" class="text-decoration-none">
+                            ${renderUsers(users)}
+                            </a>
+                        </div>
+                        <a href="./assets/pages/events/eventDetails.html?id=${event.id}" class="btn btn-outline-primary btn-sm">Ver Detalhes</a>
                     </div>
                 </div>
             `;
@@ -49,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         localStorage.setItem("owner-events", JSON.stringify(events));
         renderEvents(events);
     } catch (error) {
-        console.error(error);
+        console.error("Erro ao buscar eventos: ", error);
     }
 
     function formatDate(dateTimeStr) {
