@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const createEventForm = document.getElementById("createEventForm");
     const attractionsContainer = document.getElementById("attractionsContainer");
     const imagesContainer = document.getElementById("imagesContainer");
+    const submitBtn = document.getElementById("submitBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
 
     const addAttractionBtn = document.getElementById("addAttractionBtn");
     const addImageBtn = document.getElementById("addImageBtn");
@@ -94,6 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(eventData);
 
         try {
+            submitBtn.disabled = true;
+            cancelBtn.classList.add("disabled");
+
             const response = await fetch("http://localhost:8080/api/events", {
                 method: "POST",
                 headers: {
@@ -115,10 +120,13 @@ document.addEventListener("DOMContentLoaded", () => {
             attractionsContainer.innerHTML = "";
             imagesContainer.innerHTML = "";
 
-            window.location.href = "myEvents.html";
+            // window.location.href = "myEvents.html";
         } catch (error) {
             console.error(error);
             showAlert("danger", error.message);
+        } finally {
+            submitBtn.disabled = false;
+            cancelBtn.classList.remove("disabled");
         }
     });
 

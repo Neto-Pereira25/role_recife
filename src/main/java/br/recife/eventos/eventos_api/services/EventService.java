@@ -247,7 +247,10 @@ public class EventService {
                 recommendedEvents.addAll(matchingEvents);
             }
 
-            recommendedEvents.removeAll(favoritedEvents);
+            System.out.println();
+            System.out.println("Eventos Filtrados:");
+            System.out.println(recommendedEvents);
+            System.out.println();
 
             return recommendedEvents.stream()
                     .map(EventResponseDTO::fromEntity)

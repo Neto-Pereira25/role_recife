@@ -66,7 +66,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const events = await response.json();
 
         if (events.length === 0) {
-            eventList.innerHTML = `<p class="text-muted">Você ainda não criou nenhum evento.</p>`;
+            eventList.innerHTML = `<p class="text-center">Você ainda não criou nenhum evento.</p>`;
+            loader.classList.add("d-none");
             return;
         }
 

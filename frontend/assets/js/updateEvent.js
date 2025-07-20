@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
 
     const editEventBtn = document.getElementById("editEventBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
 
     if (!eventId || !token) {
         showAlert("danger", "ID do evento ou token inválido.");
@@ -154,6 +155,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
+            cancelBtn.classList.add("disabled");
+
             const response = await fetch(`http://localhost:8080/api/events/${eventId}`, {
                 method: "PUT",
                 headers: {
@@ -176,6 +179,9 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error(error);
             showAlert("danger", "Erro ao enviar dados.");
+        } finally {
+            cancelBtn.classList.remove("disabled");
+            editEventBtn.disabled = false;
         }
     });
 
