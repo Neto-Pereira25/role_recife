@@ -138,4 +138,15 @@ public class EventController {
             return ResponseEntity.badRequest().body(error);
         }
     }
+
+    @GetMapping("/recommended/{userId}")
+    public ResponseEntity<?> getRecommendedEvents(@PathVariable Long userId) {
+        try {
+            List<EventResponseDTO> recommendations = eventService.getRecommendedEventsForUser(userId);
+            return ResponseEntity.ok(recommendations);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+
+    }
 }

@@ -1,7 +1,9 @@
 package br.recife.eventos.eventos_api.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -33,13 +35,16 @@ public class EventService {
     private final EventOwnerUserRepository eventOwnerUserRepository;
     private final AttractionRepository attractionRepository;
     private final EventImageRepository eventImageRepository;
+    private final FavoriteService favoriteService;
 
     public EventService(EventRepository eventRepository, EventOwnerUserRepository eventOwnerUserRepository,
-            AttractionRepository attractionRepository, EventImageRepository eventImageRepository) {
+            AttractionRepository attractionRepository, EventImageRepository eventImageRepository,
+            FavoriteService favoriteService) {
         this.eventRepository = eventRepository;
         this.eventOwnerUserRepository = eventOwnerUserRepository;
         this.attractionRepository = attractionRepository;
         this.eventImageRepository = eventImageRepository;
+        this.favoriteService = favoriteService;
     }
 
     public Event createEvent(EventCreateDTO eventDto) {
@@ -226,5 +231,31 @@ public class EventService {
         String subject = authentication.getName();
         String[] parts = subject.split("-");
         return Long.parseLong(parts[0]);
+    }
+
+    public List<EventResponseDTO> getRecommendedEventsForUser(Long userId) {
+        try {
+            List<Event> favoritedEvents = favoriteService.getFavorites(userId);
+
+            Set<String> userTags = favoritedEvents.stream()
+                    .flatMap(event -> event.getTags().stream())
+                    .collect(Collectors.toSet());
+
+            Set<Event> recommendedEvents = new HashSet<>();
+            for (String tag : userTags) {
+                List<Event> matchingEvents = eventRepository.findByTagLike(tag);
+                recommendedEvents.addAll(matchingEvents);
+            }
+
+            recommendedEvents.removeAll(favoritedEvents);
+
+            return recommendedEvents.stream()
+                    .map(EventResponseDTO::fromEntity)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar eventos recomendados para o usuário: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }
