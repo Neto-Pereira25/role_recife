@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <p class="text-muted mb-1"><i class="fas fa-map-marker-alt me-1"></i>${event.location}</p>
                         <p class="text-muted"><i class="far fa-calendar-alt me-1"></i>${formatDate(event.dateHour)}</p>
                         <div class="${users.length === 0 ? "d-none" : ""} mb-2 ">
-                            <a href="./assets/pages/teste.html?id=${event.id}" class="text-decoration-none">
+                            <a href="./assets/pages/listInterestedUser.html?id=${event.id}&eventName=${event.name}" class="text-decoration-none">
                             ${renderUsers(users)}
                             </a>
                         </div>

@@ -30,6 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem("userName");
         localStorage.removeItem("role");
         localStorage.removeItem("userId");
-        window.location.href = "./index.html";
+        window.location.href = "./assets/pages/login.html";
     };
 });

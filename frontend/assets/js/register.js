@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const userProfile = document.getElementById("userProfile");
     const neighborhoodField = document.getElementById("neighborhoodField");
     const cpfCnpjField = document.getElementById("cpfCnpjField");
+    const btnRegister = document.getElementById("btnRegister");
 
     userType.addEventListener("change", () => {
         if (userType.value === "COMMON_USER") {
@@ -20,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
+
+        btnRegister.disabled = true;
 
         const name = document.getElementById("name").value.trim();
         const email = document.getElementById("email").value.trim();
@@ -87,6 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error(error);
             showAlert("danger", "Erro ao conectar com o servidor.");
+        } finally {
+            btnRegister.disabled = false;
         }
     });
 });

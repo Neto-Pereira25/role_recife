@@ -2,9 +2,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchForm = document.getElementById("searchForm");
     const resultsContainer = document.getElementById("results");
     const loader = document.getElementById("loader");
+    const btnSearch = document.getElementById("btnSearch");
 
     searchForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+
+        btnSearch.disabled = true;
+
         resultsContainer.innerHTML = "";
         loader.classList.remove("d-none");
 
@@ -40,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
             resultsContainer.innerHTML = `<div class="alert alert-danger">Erro ao buscar eventos.</div>`;
         } finally {
             loader.classList.add("d-none");
+            btnSearch.disabled = false;
         }
     });
 
@@ -48,14 +53,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         return `
             <div class="col-md-4">
-                <div class="card card-event shadow-sm h-100">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-champagne-glasses"></i> ${event.name}</h5>
-                    <p class="card-text">${event.description.slice(0, 100)}...</p>
-                    <p class="text-muted mb-1"><i class="fas fa-map-marker-alt me-1"></i>${event.location}</p>
-                    <p class="text-muted"><i class="far fa-calendar-alt me-1"></i>${formatDate(event.dateHour)}</p>
-                    <a href="../../pages/events/eventDetails.html?id=${event.id}" class="btn btn-outline-primary btn-sm">Ver Detalhes</a>
-                </div>
+                <div class="card h-100">
+                    <img src="${image}" class="card-img-top" alt="${event.name}">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-champagne-glasses"></i> ${event.name}</h5>
+                        <p class="card-text">${event.description.slice(0, 100)}...</p>
+                        <p class="mb-1"><i class="fas fa-map-marker-alt me-1"></i>${event.location}</p>
+                        <p><i class="far fa-calendar-alt me-1"></i>${formatDate(event.dateHour)}</p>
+                        <a href="../../pages/events/eventDetails.html?id=${event.id}" class="btn btn-outline-primary btn-sm">Ver Detalhes</a>
+                    </div>
                 </div>
             </div>
         `;

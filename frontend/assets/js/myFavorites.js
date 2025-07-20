@@ -31,10 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="card h-100">
                         <img src="${event.imageUrls?.[0] || 'https://via.placeholder.com/400x200'}" class="card-img-top" alt="${event.name}">
                         <div class="card-body">
-                        <h5 class="card-title">${event.name}</h5>
-                        <p class="card-text">${event.description.slice(0, 100)}...</p>
-                        <p><strong>Local:</strong> ${event.location}</p>
-                        <a href="../events/eventDetails.html?id=${event.id}" class="btn btn-primary btn-sm">Ver Detalhes</a>
+                            <h5 class="card-title"><i class="fas fa-champagne-glasses"></i> ${event.name}</h5>
+                            <p class="card-text">${event.description.slice(0, 100)}...</p>
+                            <p><i class="fas fa-map-marker-alt me-1"></i> ${event.location}</p>
+                            <p><i class="far fa-calendar-alt me-1"></i>${formatDate(event.dateHour)}</p>
+                            <a href="../events/eventDetails.html?id=${event.id}" class="btn btn-primary btn-sm">Ver Detalhes</a>
                         </div>
                     </div>
                 `;
@@ -48,4 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error(err);
             container.innerHTML = "<p>Erro ao carregar eventos favoritos.</p>";
         });
+
+    function formatDate(dateTimeStr) {
+        const date = new Date(dateTimeStr);
+        return date.toLocaleString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    }
 });
