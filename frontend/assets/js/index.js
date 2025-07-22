@@ -33,8 +33,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("Erro ao buscar usuários:", error);
             }
 
-            console.log(users);
-
             const card = document.createElement("div");
             card.className = "col-md-6";
 
@@ -42,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             card.innerHTML = `
                 <div class="card h-100">
-                    <img src="${event.imageUrls?.[0] || 'https://via.placeholder.com/400x200'}" class="card-img-top" alt="${event.name}">
+                    <img src="${event.imageUrls?.[0] || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWheNqDl8xnOdSWvl8qxsamu_zkAsfMphWHA&s'}" class="card-img-top" alt="${event.name}">
                     <div class="card-body">
                         <h5 class="card-title"><i class="fas fa-champagne-glasses"></i> ${event.name}</h5>
                         <p class="card-text">${event.description.slice(0, 100)}...</p>
