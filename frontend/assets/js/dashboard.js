@@ -25,9 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
             <a href="../pages/events/search.html" class="btn btn-outline-primary w-100">Explorar Eventos</a>
           </div>
           <div class="col-md-4 mb-3">
-            <a href="../pages/events/myFavorites.html" class="btn btn-outline-success w-100">Meus Interesses</a>
+            <a id="goToMyFavoritesEvents" href="../pages/events/myFavorites.html" class="btn btn-outline-success w-100">Meus Interesses</a>
           </div>
         `;
+
+    const goToMyFavoritesEvents = document.getElementById("goToMyFavoritesEvents");
 
     fetch(`http://localhost:8080/api/events/recommended/${userId}`, {
       headers: {
@@ -38,10 +40,69 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!res.ok) throw new Error("Erro ao buscar eventos favoritos.");
         return res.json();
       })
-      .then(events => {
+      .then(async events => {
         if (events.length === 0) {
-          eventsRecommended.innerHTML = "<p>Você ainda não marcou interesse em nenhum evento.</p>";
-          return;
+
+          goToMyFavoritesEvents.classList.add("disabled");
+          try {
+
+            const response = await fetch("http://localhost:8080/api/events");
+
+            if (!response.ok) {
+              throw new Error(response.message || "Erro ao buscar eventos.");
+            }
+
+            const eventsResponse = await response.json();
+            const firstFiveEvents = eventsResponse.slice(0, 5);
+
+            eventsRecommended.innerHTML = `
+            <p class="text-center my-4">Você ainda não marcou interesse em nenhum evento. Explore alguns eventos e se divirta</p>
+            `;
+
+            firstFiveEvents.forEach(e => {
+              const date = new Date(e.dateHour).toLocaleString("pt-BR");
+              const card = document.createElement("div");
+              card.classList.add("mb-3");
+
+              card.innerHTML = `
+                <div class="card shadow rounded-4">
+                    <img src="${e.imageUrls?.[0] || 'https://via.placeholder.com/400x200'}" class="card-img-top" alt="${e.name}">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-bullhorn"></i>
+                            ${e.name}
+                        </h5>
+                        <p class="card-text">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <strong>Local:</strong> ${e.location}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-calendar-alt"></i>
+                            <strong>Data:</strong> ${date}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-tag"></i>
+                            <strong>Tipo:</strong> ${e.eventType === 'PAID_EVENT' ? 'Evento Pago' : 'Evento Gratuito'}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-users"></i>
+                            <strong>Capacidade:</strong> ${e.capacity}
+                        </p>
+                        <div class="d-flex justify-content-end gap-2">
+                            <a class="btn btn-outline-secondary btn-sm" href="./events/eventDetails.html?id=${e.id}">Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+              `;
+              eventsRecommended.appendChild(card);
+            });
+
+            loader.classList.add("d-none");
+            eventsRecommended.classList.remove("d-none");
+            return;
+          } catch (error) {
+            console.log('Erro ao trazer todos os eventos:', error.message);
+          }
         }
 
         carouselInner.innerHTML = "";
@@ -88,11 +149,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         loader.classList.add("d-none");
         eventsRecommended.classList.remove("d-none");
+        goToMyFavoritesEvents.classList.remove("disabled");
       })
       .catch(err => {
         console.error(err);
         eventsRecommended.innerHTML = "<p>Erro ao carregar eventos favoritos.</p>";
       });
+
+
   } else if (role === "EVENT_OWNER_USER") {
     userTypeInfo.textContent = "Você está logado como Dono de Evento.";
     actions.innerHTML = `
