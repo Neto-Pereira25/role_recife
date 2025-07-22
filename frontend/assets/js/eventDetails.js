@@ -5,8 +5,10 @@ const userId = localStorage.getItem("userId");
 
 const eventId = urlParams.get("id");
 const interestBtn = document.getElementById("interestBtn");
+const goBackBtn = document.getElementById("goBackBtn");
 const loader = document.getElementById("loader");
 const detailsContainer = document.getElementById("detailsContainer");
+interestBtn.disabled = true;
 
 let imageIndex = 0;
 let imageUrls = [];
@@ -38,36 +40,72 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (token && role === "COMMON_USER") {
         interestBtn.classList.remove("d-none");
 
-        interestBtn.addEventListener('click', async () => {
-            try {
-                const response = await fetch(`http://localhost:8080/api/favorites/${userId}/${eventId}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+        try {
+            const res = await fetch(`http://localhost:8080/api/favorites/${userId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-                if (!response.ok) {
-                    const erroBody = await response.json();
-                    // console.log(response);
-                    console.log(erroBody);
-                    throw new Error(erroBody.message);
-                }
-
-                interestBtn.innerHTML = `<i class="fa-solid fa-heart me-2"></i>Interesse Registrado`;
-                interestBtn.classList.remove("btn-outline-primary");
-                interestBtn.classList.add("btn-success");
-                interestBtn.disabled = true;
-            } catch (error) {
-                interestBtn.innerHTML = `<i class="fa-solid fa-heart me-2"></i>${error.message}`;
-                interestBtn.classList.remove("btn-outline-primary");
-                interestBtn.classList.add("btn-danger");
-                interestBtn.disabled = true;
-                console.error(error);
-                console.error(error.message);
+            if (!res.ok) {
+                const erroBody = await res.json();
+                console.log(erroBody);
+                throw new Error(erroBody.message);
             }
-        });
+
+            const eventsResponse = await res.json();
+
+            const filteredEvent = eventsResponse.filter(e => e.id === Number(eventId));
+
+            if (filteredEvent.length !== 0) {
+                interestBtn.disabled = true;
+            } else {
+                interestBtn.disabled = false;
+
+                interestBtn.addEventListener('click', async () => {
+                    try {
+                        const response = await fetch(`http://localhost:8080/api/favorites/${userId}/${eventId}`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+
+                        if (!response.ok) {
+                            const erroBody = await response.json();
+                            // console.log(response);
+                            console.log(erroBody);
+                            throw new Error(erroBody.message);
+                        }
+
+                        interestBtn.innerHTML = `<i class="fa-solid fa-heart me-2"></i>Interesse Registrado`;
+                        interestBtn.classList.remove("btn-outline-primary");
+                        interestBtn.classList.add("btn-success");
+                        interestBtn.disabled = true;
+                        goBackBtn.classList.add("disabled");
+                    } catch (error) {
+                        interestBtn.innerHTML = `<i class="fa-solid fa-heart me-2"></i>${error.message}`;
+                        interestBtn.classList.remove("btn-outline-primary");
+                        interestBtn.classList.add("btn-danger");
+                        interestBtn.disabled = true;
+                        console.error(error);
+                        console.error(error.message);
+                    }
+                });
+            }
+
+        } catch (error) {
+            console.error("Erro ao buscar eventos favoritos do usuário");
+            console.error(error);
+            console.error(error.message);
+        }
+
+
+    } else {
+        console.log("Vou renderizar os eventos relacionados aqui");
     }
 });
 
@@ -113,7 +151,7 @@ function renderEventDetails(event) {
         imageIndex = 0;
         document.getElementById("eventImage").src = imageUrls[0];
     } else {
-        document.getElementById("eventImage").src = "https://via.placeholder.com/400x250?text=Sem+Imagem";
+        document.getElementById("eventImage").src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWheNqDl8xnOdSWvl8qxsamu_zkAsfMphWHA&s";
     }
 
     loader.classList.add("d-none");
