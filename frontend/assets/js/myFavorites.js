@@ -20,7 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(events => {
             if (events.length === 0) {
-                container.innerHTML = "<p>Você ainda não marcou interesse em nenhum evento.</p>";
+                container.innerHTML = "<p class='text-center'>Você ainda não marcou interesse em nenhum evento.</p>";
+                loader.classList.add("d-none");
+                container.classList.remove("d-none");
                 return;
             }
 

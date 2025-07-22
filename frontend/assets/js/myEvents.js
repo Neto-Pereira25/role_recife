@@ -13,7 +13,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     const renderEvents = (events) => {
         eventList.innerHTML = "";
 
-        events.forEach(event => {
+        events.forEach(async event => {
+            const users = [];
+            // Buscar os usuários interessados nesse evento
+            try {
+                const response = await fetch(`http://localhost:8080/api/events/getEventUsers/${event.id}`, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(response.message || "Erro ao buscar eventos.");
+                }
+
+                const usersResponse = await response.json();
+
+                usersResponse.forEach(u => users.push(u));
+            } catch (error) {
+                console.error('Erro ao trazer usuários do evento', error);
+            }
+
             const card = document.createElement("div");
             card.className = "col-md-6";
 
@@ -22,11 +43,30 @@ document.addEventListener("DOMContentLoaded", async () => {
             card.innerHTML = `
                 <div class="card shadow rounded-4">
                     <div class="card-body">
-                        <h5 class="card-title">${event.name}</h5>
-                        <p class="card-text"><strong>Local:</strong> ${event.location}</p>
-                        <p class="card-text"><strong>Data:</strong> ${date}</p>
-                        <p class="card-text"><strong>Tipo:</strong> ${event.eventType}</p>
-                        <p class="card-text"><strong>Capacidade:</strong> ${event.capacity}</p>
+                        <h5 class="card-title">
+                            <i class="fas fa-bullhorn"></i>
+                            ${event.name}
+                        </h5>
+                        <p class="card-text">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <strong>Local:</strong> ${event.location}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-calendar-alt"></i>
+                            <strong>Data:</strong> ${date}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-tag"></i>
+                            <strong>Tipo:</strong> ${event.eventType === 'PAID_EVENT' ? 'Evento Pago' : 'Evento Gratuito'}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-users"></i>
+                            <strong>Capacidade:</strong> ${event.capacity}
+                        </p>
+                        <p class="card-text">
+                            <i class="fas fa-sort-numeric-up"></i>
+                            <strong>Quantidade de pessoas interessadas:</strong> ${users.length}
+                        </p>
                         <div class="d-flex justify-content-end gap-2">
                             <a class="btn btn-outline-secondary btn-sm" href="../../pages/events/eventDetails.html?id=${event.id}">Detalhes</a>
                             <button class="btn btn-outline-primary btn-sm" onclick="editarEvento(${event.id})">Editar</button>
@@ -44,14 +84,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     try {
-        // const cached = localStorage.getItem("owner-events");
-
-        // if (cached) {
-        //     const savedEvents = JSON.parse(cached);
-        //     renderEvents(savedEvents);
-        //     return;
-        // }
-
         const response = await fetch("http://localhost:8080/api/events/mine", {
             method: "GET",
             headers: {
