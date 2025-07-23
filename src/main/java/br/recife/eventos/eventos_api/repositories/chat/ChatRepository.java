@@ -13,4 +13,8 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     Optional<Chat> findByCommonUserAndOwnerUser(CommonUser user, EventOwnerUser ownerUser);
 
     List<Chat> findByCommonUserIdOrOwnerUserId(Long commonUserId, Long ownerUserId);
+
+    List<Chat> findByCommonUser(CommonUser user);
+
+    List<Chat> findByOwnerUser(EventOwnerUser user);
 }
