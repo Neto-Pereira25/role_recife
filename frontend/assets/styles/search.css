@@ -8,11 +8,6 @@
     transform: scale(1.02);
 }
 
-.card-img-top {
-    height: 180px;
-    object-fit: cover;
-}
-
 .card {
     border: none;
     border-radius: 12px;
@@ -25,8 +20,7 @@
 }
 
 .card-img-top {
-    /* height: 200px; */
-    max-height: 50px;
+    height: 200px;
     object-fit: cover;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;

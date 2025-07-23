@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function createEventCard(event) {
-        const image = event.imageUrls?.[0] || "https://via.placeholder.com/400x180?text=Evento";
+        const image = event.imageUrls?.[0] || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWheNqDl8xnOdSWvl8qxsamu_zkAsfMphWHA&s";
 
         return `
             <div class="col-md-4">
