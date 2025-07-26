@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="../../styles/eventDetails.css" />
     <script src="../../js/navbarEvents.js" defer></script>
     <script src="../../js/footerEvents.js" defer></script>
+    <script src="../../js/startChatBtn.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </head>
 
@@ -113,6 +114,13 @@
         </div>
 
         <div class="col-md-2 d-flex flex-row gap-3">
+          <!-- Botão de Conversar com o Dono -->
+          <div class="text-center">
+            <button id="startChatBtn" class="btn btn-secondary">
+              Falar com o dono
+            </button>
+          </div>
+
           <!-- Botão de Interesse -->
           <div class="text-center">
             <button id="interestBtn" class="btn btn-outline-primary d-none">
@@ -122,7 +130,7 @@
           </div>
 
           <!-- Botão de Voltar -->
-          <div class="">
+          <div class="text-center">
             <a id="goBackBtn" class="btn btn-primary" href="../dashboard.html"
               >Voltar</a
             >

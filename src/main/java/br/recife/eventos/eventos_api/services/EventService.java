@@ -126,6 +126,7 @@ public class EventService {
                 .imageUrls(event.getImages().stream().map(EventImage::getUrl).toList())
                 .attractions(event.getAttractions().stream().map(Attraction::getName).toList())
                 .ownerName(event.getOwnerUser().getName())
+                .ownerId(event.getOwnerUser().getId())
                 .build();
     }
 

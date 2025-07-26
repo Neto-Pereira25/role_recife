@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 public class EventResponseDTO {
 
     private Long id;
+    private Long ownerId;
     private String name;
     private String description;
     private String location;

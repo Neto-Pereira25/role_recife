@@ -34,8 +34,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <p>${user.name}</p>
                         <p>${user.email}</p>
                         <p>${user.neighborhood}</p>
-                        <p>${user.type}</p>
-                        <p>${user.userProfile}</p>
+                        <p>${user.type === "COMMON_USER" ? "Usuário Comum" : "Usuário Dono de Evento"}</p>
+                        <p>${user.userProfile === "PUBLIC_USER" ? "Perfil Público" : "Perfil Privado"}</p>
+                        <a href="./chat.html" class="btn btn-primary text-decoration-none">Falar com Usuário</a>
                     </div>
                 </div>
             `;
