@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("loginBtn").classList.add("d-none");
                 document.getElementById("registerBtn").classList.add("d-none");
                 document.getElementById("dashboardLink").classList.remove("d-none");
+                document.getElementById("userChats").classList.remove("d-none");
 
                 // Mostrar links de dono de evento
                 if (userType === "EVENT_OWNER_USER") {

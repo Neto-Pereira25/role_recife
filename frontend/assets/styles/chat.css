@@ -1,0 +1,145 @@
+/* Reset básico */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* Estrutura mobile-first */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Lista de chats (visível no topo no mobile) */
+.chat-list {
+    background: #f2f2f2;
+    padding: 1rem;
+    overflow-y: auto;
+    border-bottom: 1px solid #ccc;
+}
+
+.chat-list h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.chat-list ul {
+    list-style: none;
+}
+
+.chat-list li {
+    padding: 0.5rem;
+    background: #fff;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.chat-list li:hover {
+    background: #e4e4e4;
+}
+
+/* Área principal do chat */
+.chat-window {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.chat-window header,
+.chat-window footer {
+    background: #eee;
+    padding: 1rem;
+}
+
+.chat-window header h2 {
+    font-size: 1rem;
+    color: #444;
+}
+
+.messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: #fff;
+}
+
+/* Estilo das mensagens */
+.message {
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+    font-size: 0.95rem;
+}
+
+.sent {
+    align-self: flex-end;
+    background-color: #d1e7dd;
+}
+
+.received {
+    align-self: flex-start;
+    background-color: #f8d7da;
+}
+
+/* Rodapé com input */
+.chat-window footer {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#messageInput {
+    flex: 1;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#sendButton {
+    padding: 0.6rem 1rem;
+    background: #0066cc;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#sendButton:hover {
+    background: #004c99;
+}
+
+/* ------------------------------
+   🖥 Estilos para telas maiores
+   ------------------------------ */
+@media (min-width: 768px) {
+    .chat-container {
+        flex-direction: row;
+    }
+
+    .chat-list {
+        width: 30%;
+        border-bottom: none;
+        border-right: 1px solid #ccc;
+        height: 100vh;
+    }
+
+    .chat-window {
+        width: 70%;
+    }
+
+    .chat-window header h2 {
+        font-size: 1.2rem;
+    }
+}
