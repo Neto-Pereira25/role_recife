@@ -156,6 +156,10 @@ function renderEventDetails(event) {
 
     loader.classList.add("d-none");
     detailsContainer.classList.remove("d-none");
+    detailsContainer.classList.add("d-flex");
+    detailsContainer.classList.add("flex-column");
+    detailsContainer.classList.add("align-items-center");
+    detailsContainer.classList.add("justify-content-center");
 }
 
 function formatDate(dateTimeStr) {
