@@ -1,6 +1,7 @@
 package br.recife.eventos.eventos_api.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,7 @@ import br.recife.eventos.eventos_api.repositories.auxiliary.EventImageRepository
 import br.recife.eventos.eventos_api.repositories.event.EventRepository;
 import br.recife.eventos.eventos_api.repositories.specification.EventSpecification;
 import br.recife.eventos.eventos_api.repositories.user.EventOwnerUserRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class EventService {
@@ -256,6 +258,31 @@ public class EventService {
             return recommendedEvents.stream()
                     .map(EventResponseDTO::fromEntity)
                     .collect(Collectors.toList());
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar eventos recomendados para o usuário: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Event> getRecommendedEventsByEventTags(Long eventId) {
+        try {
+            Event baseEvent = eventRepository.findById(eventId)
+                    .orElseThrow(() -> new EntityNotFoundException("Evento não encontrado"));
+
+            List<String> tags = baseEvent.getTags();
+
+            if (tags.isEmpty())
+                return Collections.emptyList();
+
+            Set<Event> result = new HashSet<>();
+            for (String tag : tags) {
+                result.addAll(eventRepository.findByTagLike(tag));
+            }
+
+            result.removeIf(e -> e.getId().equals(eventId));
+
+            return new ArrayList<>(result);
         } catch (Exception e) {
             System.err.println("Erro ao buscar eventos recomendados para o usuário: " + e.getMessage());
             e.printStackTrace();

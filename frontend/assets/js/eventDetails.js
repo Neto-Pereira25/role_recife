@@ -7,7 +7,12 @@ const eventId = urlParams.get("id");
 const interestBtn = document.getElementById("interestBtn");
 const goBackBtn = document.getElementById("goBackBtn");
 const loader = document.getElementById("loader");
+const loaderRecommendedEvents = document.getElementById("loaderRecommendedEvents");
 const detailsContainer = document.getElementById("detailsContainer");
+
+const eventsRecommended = document.getElementById("eventsRecommended");
+const carouselInner = document.getElementById("carouselInner");
+
 interestBtn.disabled = true;
 
 let imageIndex = 0;
@@ -104,8 +109,67 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-    } else {
-        console.log("Vou renderizar os eventos relacionados aqui");
+    }
+
+    // Renderizar os eventos relacionados
+    try {
+        const getRecommendedEvent = await fetch(`http://localhost:8080/api/events/recommendedByEvent/${eventId}`);
+
+        if (!getRecommendedEvent.ok) {
+            console.log("Deu ERRO ao buscar eventos relacionados");
+            console.log(getRecommendedEvent);
+            return;
+        }
+
+        const recommendedEventsByEventTagas = await getRecommendedEvent.json();
+
+        eventsRecommended.classList.remove("d-none");
+        loaderRecommendedEvents.classList.add("d-none");
+
+        carouselInner.innerHTML = "";
+
+        const cardsPerSlide = 3;
+
+        for (let i = 0; i < recommendedEventsByEventTagas.length; i += cardsPerSlide) {
+            const slide = document.createElement("div");
+            slide.className = "carousel-item" + (i === 0 ? " active" : "");
+
+            const row = document.createElement("div");
+            row.className = "row justify-content-center";
+
+            for (let j = i; j < i + cardsPerSlide && j < recommendedEventsByEventTagas.length; j++) {
+                const event = recommendedEventsByEventTagas[j];
+
+                const col = document.createElement("div");
+                col.className = "col-sm-6 col-md-4 mb-3";
+
+                col.innerHTML = `
+                    <div class="card h-100">
+                        <img src="${event.images?.[0].url || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWheNqDl8xnOdSWvl8qxsamu_zkAsfMphWHA&s'}" class="card-img-top" alt="${event.name}">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-champagne-glasses"></i> ${event.name}</h5>
+                            <p class="card-text">${event.description.slice(0, 100)}...</p>
+                            <p><i class="fas fa-map-marker-alt me-1"></i> ${event.location}</p>
+                            <p><i class="far fa-calendar-alt me-1"></i> ${formatDate(event.dateHour)}</p>
+                            <a href="./eventDetails.html?id=${event.id}" class="btn btn-primary btn-sm">Ver Detalhes</a>
+                        </div>
+                    </div>
+                `;
+
+                row.appendChild(col);
+            }
+
+            slide.appendChild(row);
+            carouselInner.appendChild(slide);
+        }
+
+        new bootstrap.Carousel(document.querySelector("#carouselCards"), {
+            interval: false,
+            ride: false
+        });
+    } catch (error) {
+        console.error(error);
+        alert("Erro ao carregar eventos relacionados.");
     }
 });
 

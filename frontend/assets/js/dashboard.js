@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
               card.innerHTML = `
                 <div class="card shadow rounded-4">
-                    <img src="${e.imageUrls?.[0] || 'https://via.placeholder.com/400x200'}" class="card-img-top" alt="${e.name}">
+                    <img src="${e.imageUrls?.[0] || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWheNqDl8xnOdSWvl8qxsamu_zkAsfMphWHA&s'}" class="card-img-top" alt="${e.name}">
                     <div class="card-body">
                         <h5 class="card-title">
                             <i class="fas fa-bullhorn"></i>

@@ -149,4 +149,15 @@ public class EventController {
         }
 
     }
+
+    @GetMapping("/recommendedByEvent/{eventId}")
+    public ResponseEntity<?> getRecommendedEventsByEvent(@PathVariable Long eventId) {
+        try {
+            List<Event> recommendedEvents = eventService.getRecommendedEventsByEventTags(eventId);
+            return ResponseEntity.ok().body(recommendedEvents);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e);
+        }
+
+    }
 }

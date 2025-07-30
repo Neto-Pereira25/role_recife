@@ -20,4 +20,17 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
                 WHERE LOWER(t) LIKE LOWER(CONCAT('%', :tag, '%'))
             """)
     List<Event> findByTagLike(@Param("tag") String tag);
+
+    @Query("""
+                SELECT DISTINCT e FROM Event e
+                JOIN e.tags t
+                WHERE (
+                    LOWER(t) LIKE ANY (
+                        SELECT LOWER(CONCAT('%', tag, '%'))
+                        FROM Event ev JOIN ev.tags tag
+                        WHERE ev.id = :eventId
+                    )
+                ) AND e.id <> :eventId
+            """)
+    List<Event> findRecommendedEventsByEventTags(@Param("eventId") Long eventId);
 }
