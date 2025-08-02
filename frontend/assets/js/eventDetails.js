@@ -123,6 +123,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const recommendedEventsByEventTagas = await getRecommendedEvent.json();
 
+        if (recommendedEventsByEventTagas.length === 0) {
+            eventsRecommended.innerHTML = "<p class='mt-3 text-center'>Não há nenhum evento para recomendar no momento!</p>";
+            eventsRecommended.classList.remove("d-none");
+            loaderRecommendedEvents.classList.add("d-none");
+            return;
+        }
+
         eventsRecommended.classList.remove("d-none");
         loaderRecommendedEvents.classList.add("d-none");
 

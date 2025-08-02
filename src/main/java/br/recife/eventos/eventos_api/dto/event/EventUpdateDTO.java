@@ -27,4 +27,5 @@ public class EventUpdateDTO {
     private List<String> imageUrls;
     private List<String> attractions;
     private List<String> tags;
+    private Boolean allowReservation;
 }

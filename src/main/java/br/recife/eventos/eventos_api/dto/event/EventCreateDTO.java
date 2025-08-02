@@ -52,4 +52,7 @@ public class EventCreateDTO {
     private List<String> attractions;
 
     private List<String> imageUrls;
+
+    @NotNull(message = "Você deve informar se o evento aceita reserva de vaga.")
+    private Boolean allowReservation;
 }

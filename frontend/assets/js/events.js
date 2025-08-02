@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
             description: document.getElementById("description").value,
             ticketLink: document.getElementById("ticketLink").value || null,
             tags: document.getElementById("tags").value.split(",").map(tag => tag.trim()).filter(Boolean),
+            allowReservation: document.getElementById("allowReservation").checked,
             imageUrls: [],
             attractions: []
         };
@@ -93,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        console.log(eventData);
+        console.log("Dados do evento que vai ser cadastrado:", eventData);
 
         try {
             submitBtn.disabled = true;

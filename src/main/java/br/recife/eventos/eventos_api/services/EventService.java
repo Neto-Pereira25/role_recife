@@ -74,6 +74,7 @@ public class EventService {
         event.setPeriodicity(eventDto.getPeriodicity());
         event.setTicketLink(eventDto.getTicketLink());
         event.setTags(eventDto.getTags());
+        event.setReservable(eventDto.getAllowReservation());
         event.setOwnerUser(ownerUser);
 
         event = eventRepository.save(event);
@@ -167,6 +168,7 @@ public class EventService {
         event.setPeriodicity(eventDto.getPeriodicity());
         event.setTicketLink(eventDto.getTicketLink());
         event.setTags(eventDto.getTags());
+        event.setReservable(eventDto.getAllowReservation());
 
         // --- LIMPA IMAGENS ANTIGAS ---
         List<EventImage> oldImages = new ArrayList<>(event.getImages());
