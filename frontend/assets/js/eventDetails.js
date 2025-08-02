@@ -19,6 +19,9 @@ let imageIndex = 0;
 let imageUrls = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
+
+    document.getElementById("reserveButton").disabled = true;
+
     try {
         const response = await fetch(`http://localhost:8080/api/events/${eventId}`);
         if (!response.ok) throw new Error("Evento não encontrado.");
@@ -90,7 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         interestBtn.classList.remove("btn-outline-primary");
                         interestBtn.classList.add("btn-success");
                         interestBtn.disabled = true;
-                        goBackBtn.classList.add("disabled");
+                        // goBackBtn.classList.add("disabled");
                     } catch (error) {
                         interestBtn.innerHTML = `<i class="fa-solid fa-heart me-2"></i>${error.message}`;
                         interestBtn.classList.remove("btn-outline-primary");
@@ -107,8 +110,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error(error);
             console.error(error.message);
         }
-
-
     }
 
     // Renderizar os eventos relacionados
@@ -174,13 +175,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             interval: false,
             ride: false
         });
+
+
     } catch (error) {
         console.error(error);
         alert("Erro ao carregar eventos relacionados.");
     }
 });
 
-function renderEventDetails(event) {
+async function renderEventDetails(event) {
     document.getElementById("eventName").textContent = event.name;
     document.getElementById("eventLocation").textContent = event.location;
     document.getElementById("eventDate").textContent = formatDate(event.dateHour);
@@ -223,6 +226,88 @@ function renderEventDetails(event) {
         document.getElementById("eventImage").src = imageUrls[0];
     } else {
         document.getElementById("eventImage").src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWheNqDl8xnOdSWvl8qxsamu_zkAsfMphWHA&s";
+    }
+
+    if (token && role === "COMMON_USER") {
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/reservations/user/${userId}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                }
+            });
+
+            if (!response.ok) {
+                console.log("Error")
+                console.log(response);
+                throw response;
+            }
+
+            const listReservation = await response.json();
+            const reservation = listReservation.filter(r => r.eventId === Number(eventId));
+
+            if (reservation.length === 1) {
+                console.log("Você já reservou esse evento fofinho!");
+                document.getElementById("reserveButton").disabled = true;
+                document.getElementById("reserveButton").textContent = "Você já reservou uma vaga para esse evento";
+                document.getElementById("reserveButton").classList.add("bg-danger");
+            } else {
+                document.getElementById("reserveButton").disabled = false;
+            }
+        } catch (error) {
+            console.log("Erro ao encontrar os eventos que o usuário tem reserva.");
+            console.log(error);
+        }
+
+        if (event.allowReservation) {
+            document.getElementById("reservationSection").classList.remove("d-none");
+            document.getElementById("filledSpots").textContent = event.reservations.length;
+            document.getElementById("totalEventCapacity").textContent = event.capacity;
+            if (event.reservations.length >= event.capacity) {
+                document.getElementById("reserveButton").disabled = true;
+                document.getElementById("reserveButton").textContent = "Vagas esgotadas";
+                document.getElementById("reserveButton").classList.add("bg-danger");
+            }
+        }
+
+        console.log("Evento que vai ser reenderizado:", event);
+
+        document.getElementById("reserveButton").addEventListener("click", async (event) => {
+            document.getElementById("reserveButton").disabled = true;
+            try {
+                const response = await fetch(`http://localhost:8080/api/reservations`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        eventId: eventId,
+                        userId: userId
+                    }),
+                });
+
+                if (!response.ok) {
+                    console.log(response);
+                    throw new Error("Erro ao reservar vaga");
+                }
+
+                document.getElementById("reservationMessage").textContent = "Reserva realizada com sucesso!";
+                document.getElementById("reservationMessage").classList.remove("d-none");
+
+                const filled = parseInt(document.getElementById("filledSpots").textContent);
+                document.getElementById("filledSpots").textContent = filled + 1;
+
+                if (filled + 1 >= event.capacity) {
+                    document.getElementById("reserveButton").disabled = true;
+                    document.getElementById("reserveButton").textContent = "Vagas esgotadas";
+                }
+            } catch (error) {
+                console.log("Erro inesperado ao tentar reservar vaga");
+                console.log(error);
+            }
+        });
     }
 
     loader.classList.add("d-none");

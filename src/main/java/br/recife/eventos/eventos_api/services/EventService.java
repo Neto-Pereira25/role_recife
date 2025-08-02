@@ -125,6 +125,8 @@ public class EventService {
                 .periodicity(event.getPeriodicity())
                 .capacity(event.getCapacity())
                 .ticketLink(event.getTicketLink())
+                .allowReservation(event.isReservable())
+                .reservations(event.getReservations())
                 .tags(event.getTags())
                 .imageUrls(event.getImages().stream().map(EventImage::getUrl).toList())
                 .attractions(event.getAttractions().stream().map(Attraction::getName).toList())

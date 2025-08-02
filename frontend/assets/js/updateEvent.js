@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("description").value = event.description || "";
         document.getElementById("ticketLink").value = event.ticketLink || "";
         document.getElementById("tags").value = (event.tags || []).join(", ");
+        document.getElementById("allowReservation").checked = event.allowReservation || false;
 
         // Imagens
         (event.imageUrls || []).forEach((url) => addImageField(url));
@@ -136,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .split(",")
                 .map((t) => t.trim())
                 .filter(Boolean),
+            allowReservation: document.getElementById("allowReservation").checked,
             imageUrls: [],
             attractions: [],
         };
@@ -153,6 +155,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 payload.attractions.push(nameInputs[i].value.trim());
             }
         }
+
+        console.log("Dados do evento que vai ser cadastrado:", payload);
 
         try {
             cancelBtn.classList.add("disabled");

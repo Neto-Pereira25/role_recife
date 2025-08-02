@@ -6,6 +6,7 @@ import java.util.List;
 import br.recife.eventos.eventos_api.models.entities.Attraction;
 import br.recife.eventos.eventos_api.models.entities.Event;
 import br.recife.eventos.eventos_api.models.entities.EventImage;
+import br.recife.eventos.eventos_api.models.entities.Reservation;
 import br.recife.eventos.eventos_api.models.entities.Event.EventType;
 import br.recife.eventos.eventos_api.models.entities.Event.Periodicity;
 import br.recife.eventos.eventos_api.models.entities.Event.SpaceType;
@@ -36,6 +37,8 @@ public class EventResponseDTO {
     private List<String> imageUrls;
     private List<String> attractions;
     private List<String> tags;
+    private Boolean allowReservation;
+    private List<Reservation> reservations;
 
     private String ownerName;
 
@@ -55,6 +58,8 @@ public class EventResponseDTO {
         dto.setImageUrls(event.getImages().stream().map(EventImage::getUrl).toList());
         dto.setAttractions(event.getAttractions().stream().map(Attraction::getName).toList());
         dto.setTags(event.getTags());
+        dto.setAllowReservation(event.isReservable());
+        dto.setReservations(event.getReservations());
 
         return dto;
     }

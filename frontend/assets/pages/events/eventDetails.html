@@ -136,6 +136,21 @@
             >
           </div>
         </div>
+        <!-- Botão de reservar vaga -->
+        <div
+          id="reservationSection"
+          class="d-flex flex-column justify-content-center align-items-center mt-4 d-none"
+        >
+          <p>
+            <strong>Vagas preenchidas:</strong>
+            <span id="filledSpots"></span> /
+            <span id="totalEventCapacity"></span>
+          </p>
+          <button id="reserveButton" class="btn btn-success">
+            Reservar vaga
+          </button>
+          <p id="reservationMessage" class="mt-2 text-success d-none"></p>
+        </div>
       </div>
 
       <!-- Loader -->
