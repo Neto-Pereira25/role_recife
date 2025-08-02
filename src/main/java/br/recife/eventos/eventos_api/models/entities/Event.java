@@ -83,6 +83,13 @@ public class Event {
     @Column(name = "tag")
     private List<String> tags;
 
+    @Column(name = "is_reservable")
+    private boolean reservable;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Reservation> reservations = new ArrayList<>();
+
     public enum Periodicity {
         SINGLE_EVENT,
         WEEKLY_EVENT,
