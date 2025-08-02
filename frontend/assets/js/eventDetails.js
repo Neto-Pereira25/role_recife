@@ -27,23 +27,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!response.ok) throw new Error("Evento não encontrado.");
 
         const event = await response.json();
-        renderEventDetails(event);
+        renderEvent(event);
     } catch (error) {
         console.error(error);
         alert("Erro ao carregar detalhes do evento.");
     }
-
-    document.getElementById("prevImageBtn").addEventListener("click", () => {
-        if (imageUrls.length === 0) return;
-        imageIndex = (imageIndex - 1 + imageUrls.length) % imageUrls.length;
-        document.getElementById("eventImage").src = imageUrls[imageIndex];
-    });
-
-    document.getElementById("nextImageBtn").addEventListener("click", () => {
-        if (imageUrls.length === 0) return;
-        imageIndex = (imageIndex + 1) % imageUrls.length;
-        document.getElementById("eventImage").src = imageUrls[imageIndex];
-    });
 
     if (token && role === "COMMON_USER") {
         interestBtn.classList.remove("d-none");
@@ -183,50 +171,115 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-async function renderEventDetails(event) {
-    document.getElementById("eventName").textContent = event.name;
-    document.getElementById("eventLocation").textContent = event.location;
-    document.getElementById("eventDate").textContent = formatDate(event.dateHour);
-    document.getElementById("eventCapacity").textContent = event.capacity;
-    document.getElementById("eventAgeGroup").textContent = event.ageGroup;
-    document.getElementById("eventSpaceType").textContent = formatEnum(event.spaceType);
-    document.getElementById("eventPeriodicity").textContent = formatEnum(event.periodicity);
-    document.getElementById("eventType").textContent = formatEnum(event.eventType);
-    document.getElementById("eventDescription").textContent = event.description;
+async function renderEvent(event) {
+    const container = document.getElementById("event-container");
 
-    // Link de ingresso
-    if (event.ticketLink) {
-        document.getElementById("eventTicketLink").href = event.ticketLink;
-        document.getElementById("eventLinkContainer").style.display = "block";
-    }
+    const sectionHeader = document.createElement("section");
+    sectionHeader.innerHTML = `
+        <section class="bg-gradient-festa text-white text-center py-5">
+            <div class="container">
+                <h1 class="display-4 fw-bold">${event.name}</h1>
+                <p class="lead">${event.description}</p>
+                <div class="d-flex flex-wrap justify-content-center gap-3 my-4">
+                <span class="badge bg-light text-dark fs-6"><i class="bi bi-calendar-event"></i> ${formatDate(event.dateHour)}</span>
+                <span class="badge bg-light text-dark fs-6"><i class="bi bi-clock"></i> ${formatTime(event.dateHour)}</span>
+                <span class="badge bg-light text-dark fs-6"><i class="bi bi-people"></i> Até ${event.capacity} pessoas</span>
+                </div>
+                <a href="${event.ticketLink}" target="_blank" class="btn btn-light btn-lg shadow-festa">
+                Comprar Ingressos
+                </a>
+            </div>
+        </section>
+    `;
 
-    // Tags
-    // document.getElementById("eventTags").textContent = (event.tags || []).join(", ");
-    const tagsContainer = document.getElementById("eventTags");
-    (event.tags || []).forEach((tag) => {
-        const span = document.createElement("span");
-        span.className = "badge bg-secondary me-1";
-        span.textContent = tag;
-        tagsContainer.appendChild(span);
-    });
+    const sectionPhotos = document.createElement("section");
+    sectionPhotos.innerHTML = `
+        <section class="container my-5">
+            <h2 class="text-center mb-4"><i class="bi bi-image text-primary mx-2"></i>Fotos do Evento</h2>
+            <div id="carouselImages" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                ${event.imageUrls.map((img, idx) => `
+                    <div class="carousel-item ${idx === 0 ? 'active' : ''}">
+                    <img src="${img}" class="d-block w-100 rounded" alt="Imagem ${idx + 1}">
+                    </div>`).join("")}
+                </div>
+                <button class="carousel-control-prev bg-dark" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next bg-dark" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </section>
+    `;
 
-    // Atrações
-    const attractionList = document.getElementById("eventAttractions");
-    attractionList.innerHTML = "";
-    (event.attractions || []).forEach((a) => {
-        const li = document.createElement("li");
-        li.textContent = `${a}`;
-        attractionList.appendChild(li);
-    });
+    const sectionInfo = document.createElement("section");
+    sectionInfo.innerHTML = `
+        <section class="container my-5">
+            <div class="row g-4">
+                <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                    <h4 class="card-title"><i class="bi bi-geo-alt-fill text-primary"></i> Detalhes do Evento</h4>
+                    <p><strong>Local:</strong> ${event.location}</p>
+                    <p><strong>Classificação:</strong> +${event.ageGroup} anos</p>
+                    <p><strong>Tipo:</strong> ${getEventTypeLabel(event.eventType)}</p>
+                    <p><strong>Espaço:</strong> ${getSpaceTypeLabel(event.spaceType)}</p>
+                    <p><strong>Organizador:</strong> ${event.ownerName}</p>
+                    </div>
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                    <h4 class="card-title"><i class="bi bi-music-note-beamed text-primary"></i> Atrações</h4>
+                    <ul class="list-group list-group-flush">
+                        ${event.attractions.map(attr => `<li class="list-group-item">${attr}</li>`).join("")}
+                    </ul>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+    `;
 
-    // Imagens
-    imageUrls = event.imageUrls || [];
-    if (imageUrls.length > 0) {
-        imageIndex = 0;
-        document.getElementById("eventImage").src = imageUrls[0];
-    } else {
-        document.getElementById("eventImage").src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWheNqDl8xnOdSWvl8qxsamu_zkAsfMphWHA&s";
-    }
+    const sectionTags = document.createElement("section");
+    sectionTags.innerHTML = `
+        <section class="container my-5">
+            <h4 class="text-center mb-3"><i class="bi bi-tags text-primary mx-2"></i>Tags do Evento</h4>
+            <div class="d-flex flex-wrap justify-content-center gap-2">
+                ${event.tags.map(tag => `<span class="badge border border-primary text-primary px-3 py-2">${tag}</span>`).join("")}
+            </div>
+        </section>
+    `;
+
+    const sectionPeople = document.createElement("section");
+    sectionPeople.innerHTML = `
+        ${event.reservations.length ? `
+        <section class="container my-5">
+            <h4 class="text-center mb-4"><i class="bi bi-people-fill text-primary"></i> Pessoas Confirmadas (${event.reservations.length})</h4>
+            <div class="row g-3">
+                ${event.reservations.map(r => `
+                <div class="col-sm-6 col-md-4">
+                    <div class="d-flex align-items-center p-3 bg-white rounded shadow-sm">
+                    <div class="bg-gradient-festa text-white rounded-circle d-flex align-items-center justify-content-center" style="width:40px; height:40px;">
+                        ${r.user.name.charAt(0)}
+                    </div>
+                    <div class="ms-3">
+                        <strong>${r.user.name}</strong>
+                        <div class="text-muted small">${r.user.neighborhood}</div>
+                    </div>
+                    </div>
+                </div>`).join("")}
+            </div>
+        </section>` : ""}
+    `;
+
+    container.prepend(sectionPeople);
+    container.prepend(sectionTags);
+    container.prepend(sectionInfo);
+    container.prepend(sectionPhotos);
+    container.prepend(sectionHeader);
 
     if (token && role === "COMMON_USER") {
 
@@ -303,6 +356,8 @@ async function renderEventDetails(event) {
                     document.getElementById("reserveButton").disabled = true;
                     document.getElementById("reserveButton").textContent = "Vagas esgotadas";
                 }
+
+                window.location.reload();
             } catch (error) {
                 console.log("Erro inesperado ao tentar reservar vaga");
                 console.log(error);
@@ -311,11 +366,6 @@ async function renderEventDetails(event) {
     }
 
     loader.classList.add("d-none");
-    detailsContainer.classList.remove("d-none");
-    detailsContainer.classList.add("d-flex");
-    detailsContainer.classList.add("flex-column");
-    detailsContainer.classList.add("align-items-center");
-    detailsContainer.classList.add("justify-content-center");
 }
 
 function formatDate(dateTimeStr) {
@@ -329,4 +379,24 @@ function formatEnum(value) {
         .toLowerCase()
         .replace(/_/g, " ")
         .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return new Intl.DateTimeFormat('pt-BR', {
+        weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
+    }).format(date);
+}
+
+function formatTime(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
+function getEventTypeLabel(type) {
+    return type === "PAID_EVENT" ? "Evento Pago" : "Evento Gratuito";
+}
+
+function getSpaceTypeLabel(type) {
+    return type === "OPEN" ? "Espaço Aberto" : "Espaço Fechado";
 }
