@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem("userName");
         localStorage.removeItem("role");
         localStorage.removeItem("userId");
+        localStorage.removeItem("user");
         window.location.href = "./assets/pages/login.html";
     };
 });

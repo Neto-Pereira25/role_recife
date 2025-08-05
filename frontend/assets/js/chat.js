@@ -10,6 +10,11 @@ async function loadChats() {
     const chatList = document.getElementById("chatList");
     chatList.innerHTML = '';
 
+    if (!user) {
+        window.location.href = "/frontend/assets/pages/login.html";
+        return;
+    }
+
     if (user.userType === "COMMON_USER") {
         const res = await fetch(`http://localhost:8080/api/chat/common/${user.userId}`, {
             method: "GET",
